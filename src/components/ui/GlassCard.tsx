@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import VanillaTilt from "vanilla-tilt";
+import { playTap } from "@/lib/sound";
 
 interface GlassCardProps {
   children: React.ReactNode;
@@ -10,21 +11,8 @@ interface GlassCardProps {
   target?: string;
   rel?: string;
   tiltMax?: number;
-  glare?: boolean;
 }
 
-/**
- * Liquid Glass card with Apple-style 3D tilt + glare.
- *
- * Uses vanilla-tilt.js which handles:
- * - Mouse hover tilt on desktop
- * - Gyroscope tilt on mobile (built-in, auto-detects)
- * - Glare effect (the moving light reflection)
- * - Smooth easing and reset
- *
- * This is the same effect as Apple TV cards, App Store cards,
- * and Apple Gift Cards.
- */
 export function GlassCard({
   children,
   className = "",
@@ -32,7 +20,6 @@ export function GlassCard({
   target,
   rel,
   tiltMax = 8,
-  glare = true,
 }: GlassCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -41,28 +28,27 @@ export function GlassCard({
     if (!el) return;
 
     VanillaTilt.init(el, {
-      max: tiltMax,               // max tilt in degrees
-      speed: 400,                 // transition speed
-      scale: 1.02,                // slight scale on hover
-      perspective: 800,           // perspective distance
-      glare: glare,               // enable glare effect
-      "max-glare": 0.25,          // max glare opacity
-      gyroscope: true,            // enable device tilt
-      gyroscopeMinAngleX: -15,    // gyro sensitivity range
+      max: tiltMax,
+      speed: 400,
+      scale: 1.02,
+      perspective: 800,
+      glare: true,
+      "max-glare": 0.25,
+      gyroscope: true,
+      gyroscopeMinAngleX: -15,
       gyroscopeMaxAngleX: 15,
       gyroscopeMinAngleY: -15,
       gyroscopeMaxAngleY: 15,
-      reset: true,                // reset on mouse leave
+      reset: true,
       "reset-to-start": true,
       easing: "cubic-bezier(0.23, 1, 0.32, 1)",
     });
 
     return () => {
-      if ((el as HTMLElement & { vanillaTilt?: { destroy: () => void } }).vanillaTilt) {
-        (el as HTMLElement & { vanillaTilt?: { destroy: () => void } }).vanillaTilt!.destroy();
-      }
+      const t = el as HTMLElement & { vanillaTilt?: { destroy: () => void } };
+      t.vanillaTilt?.destroy();
     };
-  }, [tiltMax, glare]);
+  }, [tiltMax]);
 
   const inner = (
     <div ref={ref} className={`liquid-glass ${className}`}>
@@ -74,7 +60,7 @@ export function GlassCard({
 
   if (href) {
     return (
-      <a href={href} target={target} rel={rel} className="block">
+      <a href={href} target={target} rel={rel} className="block" onClick={playTap}>
         {inner}
       </a>
     );
