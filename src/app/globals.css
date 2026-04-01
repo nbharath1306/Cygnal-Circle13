@@ -108,22 +108,22 @@ body {
   border-radius: inherit;
   pointer-events: none; z-index: 1;
   background:
-    /* Top-left corner glow — primary, brighter */
+    /* Top-left corner glow — primary, bright */
     radial-gradient(
-      ellipse 60% 50% at
-        calc(18% + var(--glow-shift-x, 0px))
-        calc(15% + var(--glow-shift-y, 0px)),
-      rgba(255, 255, 255, 0.28) 0%,
-      rgba(255, 255, 255, 0.08) 30%,
+      ellipse 65% 55% at
+        calc(15% + var(--glow-shift-x, 0px))
+        calc(12% + var(--glow-shift-y, 0px)),
+      rgba(255, 255, 255, 0.40) 0%,
+      rgba(255, 255, 255, 0.12) 30%,
       transparent 60%
     ),
-    /* Bottom-right corner glow — secondary, softer */
+    /* Bottom-right corner glow — secondary */
     radial-gradient(
-      ellipse 50% 45% at
-        calc(82% - var(--glow-shift-x, 0px))
-        calc(85% - var(--glow-shift-y, 0px)),
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.03) 35%,
+      ellipse 55% 50% at
+        calc(85% - var(--glow-shift-x, 0px))
+        calc(88% - var(--glow-shift-y, 0px)),
+      rgba(255, 255, 255, 0.20) 0%,
+      rgba(255, 255, 255, 0.05) 35%,
       transparent 60%
     );
 }
@@ -167,20 +167,20 @@ body {
   background:
     /* Top-left glow — larger on hero */
     radial-gradient(
-      ellipse 55% 45% at
-        calc(15% + var(--glow-shift-x, 0px))
-        calc(12% + var(--glow-shift-y, 0px)),
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(255, 255, 255, 0.06) 35%,
+      ellipse 60% 50% at
+        calc(12% + var(--glow-shift-x, 0px))
+        calc(10% + var(--glow-shift-y, 0px)),
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.10) 35%,
       transparent 60%
     ),
     /* Bottom-right glow */
     radial-gradient(
-      ellipse 45% 40% at
-        calc(85% - var(--glow-shift-x, 0px))
-        calc(88% - var(--glow-shift-y, 0px)),
-      rgba(255, 255, 255, 0.10) 0%,
-      rgba(255, 255, 255, 0.02) 40%,
+      ellipse 50% 45% at
+        calc(88% - var(--glow-shift-x, 0px))
+        calc(90% - var(--glow-shift-y, 0px)),
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.04) 40%,
       transparent 60%
     );
 }

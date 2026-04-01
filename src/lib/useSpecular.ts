@@ -96,20 +96,20 @@ export function useSpecular() {
     const el = ref.current;
     if (!el) return;
 
-    // Smooth trailing
-    current.current.x = lerp(current.current.x, tiltX, 0.05);
-    current.current.y = lerp(current.current.y, tiltY, 0.05);
+    // Smooth trailing — 0.1 is responsive but not jittery
+    current.current.x = lerp(current.current.x, tiltX, 0.1);
+    current.current.y = lerp(current.current.y, tiltY, 0.1);
 
     const cx = current.current.x;
     const cy = current.current.y;
 
-    // Corner glow shift — max ±6px
-    el.style.setProperty("--glow-shift-x", `${cx * 6}px`);
-    el.style.setProperty("--glow-shift-y", `${cy * 6}px`);
+    // Corner glow shift — max ±18px (visible movement)
+    el.style.setProperty("--glow-shift-x", `${cx * 18}px`);
+    el.style.setProperty("--glow-shift-y", `${cy * 18}px`);
 
-    // Physical tilt — ±0.3° max, barely perceptible
+    // Physical tilt — ±1.2° (noticeable but not wild)
     el.style.transform =
-      `perspective(1200px) rotateY(${cx * 0.3}deg) rotateX(${-cy * 0.3}deg)`;
+      `perspective(800px) rotateY(${cx * 1.2}deg) rotateX(${-cy * 1.2}deg)`;
 
     raf.current = requestAnimationFrame(animate);
   }, []);
