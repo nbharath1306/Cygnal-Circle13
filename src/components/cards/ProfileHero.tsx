@@ -10,66 +10,51 @@ const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 export function ProfileHero({ member }: { member: TeamMember }) {
   return (
     <section className="relative">
-      {/*
-        Cover — atmospheric blur backdrop.
-        Works with ANY photo (portrait, landscape, square).
-        The image is rendered twice:
-        1. Blurred + scaled up → fills the container as ambient color/texture
-        2. Sharp + naturally positioned → visible through a soft vignette
-        This is the Spotify/Apple Music approach.
-      */}
-      <div className="relative h-[340px] sm:h-[380px] w-full overflow-hidden">
+      {/* Cover — atmospheric, immersive */}
+      <div className="relative h-[360px] sm:h-[400px] w-full overflow-hidden">
         {member.coverPhoto ? (
           <>
-            {/* Layer 1: Blurred ambient fill — always covers, any aspect ratio */}
             <Image
               src={member.coverPhoto}
               alt=""
               fill
               priority
-              className="object-cover scale-150 blur-2xl brightness-75 saturate-[1.2]"
+              className="object-cover scale-150 blur-3xl brightness-[0.4] saturate-[0.8]"
             />
-            {/* Layer 2: Sharp image, centered, natural positioning */}
             <Image
               src={member.coverPhoto}
               alt=""
               fill
               priority
-              className="object-cover object-center"
+              className="object-cover object-center opacity-80"
             />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1610] via-bg-primary to-[#0d0c0a]" />
+          <div className="absolute inset-0 bg-black" />
         )}
-
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/25 via-transparent to-transparent" />
-        {/* Side vignette for cinematic feel */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,var(--color-bg-primary)_100%)]" />
-        {/* Gold ambient glow */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-accent-gold/[0.03] rounded-full blur-3xl" />
+        {/* Gradients — deep fade into pure black */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,black_100%)]" />
       </div>
 
-      {/* Profile content — overlaps cover */}
-      <div className="relative -mt-32 flex flex-col items-center text-center px-6 pb-8">
-        {/* Profile photo with gold ring */}
+      {/* Profile content */}
+      <div className="relative -mt-36 flex flex-col items-center text-center px-6 pb-10">
+        {/* Photo — clean, refined ring */}
         <motion.div
-          initial={{ scale: 0.85, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease }}
-          className="relative mb-6"
+          transition={{ duration: 0.7, ease }}
+          className="relative mb-7"
         >
-          {/* Outer glow */}
-          <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-accent-gold/20 via-transparent to-accent-gold/20 blur-lg" />
-          {/* Gold border ring */}
-          <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full p-[2.5px] bg-gradient-to-br from-accent-gold via-accent-gold-bright to-accent-gold">
-            <div className="w-full h-full rounded-full overflow-hidden bg-bg-primary ring-2 ring-bg-primary">
+          <div className="absolute -inset-4 rounded-full bg-accent-gold/[0.06] blur-2xl" />
+          <div className="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] rounded-full p-[2px] bg-gradient-to-b from-accent-gold/50 via-accent-gold/20 to-transparent">
+            <div className="w-full h-full rounded-full overflow-hidden bg-black ring-[3px] ring-black">
               <Image
                 src={member.photo}
                 alt={`${member.name}, ${member.title} at ${member.company}`}
-                width={144}
-                height={144}
+                width={140}
+                height={140}
                 priority
                 className="rounded-full object-cover w-full h-full"
               />
@@ -77,44 +62,42 @@ export function ProfileHero({ member }: { member: TeamMember }) {
           </div>
         </motion.div>
 
-        {/* Name */}
+        {/* Name — commanding */}
         <motion.h1
-          initial={{ y: 15, opacity: 0 }}
+          initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.1, ease }}
-          className="font-[family-name:var(--font-display)] text-[2.25rem] sm:text-[2.75rem] text-text-primary tracking-[-0.02em] leading-none"
+          transition={{ duration: 0.7, delay: 0.1, ease }}
+          className="font-[family-name:var(--font-display)] text-[2.5rem] sm:text-[3.25rem] text-white tracking-[-0.03em] leading-[0.95]"
         >
           {member.name}
         </motion.h1>
 
-        {/* Title pill */}
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
+        {/* Title — spaced, quiet authority */}
+        <motion.p
+          initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2, ease }}
-          className="mt-3"
+          transition={{ duration: 0.6, delay: 0.2, ease }}
+          className="mt-4 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-text-secondary font-medium"
         >
-          <span className="inline-block text-[11px] uppercase tracking-[0.18em] text-text-accent font-semibold px-3 py-1 rounded-full border border-accent-gold/15 bg-accent-gold-muted">
-            {member.title} &middot; {member.company}
-          </span>
-        </motion.div>
+          {member.title} &nbsp;&bull;&nbsp; {member.company}
+        </motion.p>
 
         {/* Bio */}
         <motion.p
-          initial={{ y: 10, opacity: 0 }}
+          initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3, ease }}
-          className="mt-5 text-[14px] sm:text-[15px] text-text-secondary max-w-[300px] leading-[1.6]"
+          transition={{ duration: 0.6, delay: 0.3, ease }}
+          className="mt-5 text-[14px] text-text-secondary/80 max-w-[280px] leading-[1.7] font-light"
         >
           {member.bio}
         </motion.p>
 
-        {/* Social icons */}
+        {/* Social icons — minimal, refined */}
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
+          initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4, ease }}
-          className="mt-6 flex items-center gap-2"
+          transition={{ duration: 0.6, delay: 0.4, ease }}
+          className="mt-7 flex items-center gap-3"
         >
           {member.socials.map((social) => (
             <a
@@ -124,30 +107,30 @@ export function ProfileHero({ member }: { member: TeamMember }) {
               rel="noopener noreferrer"
               aria-label={social.platform}
               className="
-                w-11 h-11 flex items-center justify-center rounded-full
-                bg-bg-elevated/80 border border-border-default
-                text-text-secondary
-                hover:text-accent-gold-bright hover:border-accent-gold/30
-                hover:bg-accent-gold-muted hover:shadow-[0_0_16px_-4px_rgba(212,175,85,0.25)]
-                transition-all duration-250 ease-out
+                w-10 h-10 flex items-center justify-center rounded-full
+                border border-white/[0.08]
+                text-white/40
+                hover:text-white hover:border-white/20
+                hover:bg-white/[0.04]
+                transition-all duration-300 ease-out
               "
             >
-              {renderIcon(social.icon, { size: 18 })}
+              {renderIcon(social.icon, { size: 16 })}
             </a>
           ))}
         </motion.div>
 
-        {/* Status badge */}
+        {/* Status */}
         {member.status && (
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.5, ease }}
-            className="mt-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.55, ease }}
+            className="mt-6"
           >
-            <div className="glow-pulse inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-gold/15 bg-accent-gold-muted/60 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-accent-gold" />
-              <span className="text-[12px] text-text-accent font-semibold tracking-wide">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.02]">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-gold glow-pulse" />
+              <span className="text-[11px] text-text-secondary tracking-[0.08em] font-medium">
                 {member.status}
               </span>
             </div>

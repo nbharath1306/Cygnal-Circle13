@@ -12,18 +12,18 @@ export function LinkCard({ link }: { link: Link }) {
       className={`
         group relative flex items-center gap-4 w-full rounded-2xl
         overflow-hidden
-        transition-all duration-250 ease-out
-        px-5 py-[18px]
+        transition-all duration-300 ease-out
+        px-5 py-4
+        border
         ${
           isPrimary
-            ? "bg-gradient-to-r from-accent-gold/[0.08] to-accent-gold/[0.02] border border-accent-gold/20 hover:border-accent-gold/40 hover:shadow-[0_0_32px_-8px_rgba(212,175,85,0.2)]"
-            : "bg-bg-card border border-border-default hover:border-border-hover hover:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
+            ? "border-accent-gold/15 bg-accent-gold/[0.03] hover:bg-accent-gold/[0.06] hover:border-accent-gold/25"
+            : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]"
         }
-        hover:-translate-y-[2px]
-        active:translate-y-0 active:scale-[0.995]
+        hover:-translate-y-[1px]
+        active:translate-y-0
       `}
     >
-      {/* Shimmer overlay on primary */}
       {isPrimary && (
         <div className="absolute inset-0 shimmer pointer-events-none" />
       )}
@@ -31,30 +31,26 @@ export function LinkCard({ link }: { link: Link }) {
       {/* Icon */}
       <div
         className={`
-          shrink-0 w-11 h-11 rounded-xl flex items-center justify-center
-          ${
-            isPrimary
-              ? "bg-accent-gold/[0.12] ring-1 ring-accent-gold/10"
-              : "bg-bg-subtle ring-1 ring-border-default group-hover:ring-border-hover"
-          }
-          transition-all duration-200
+          shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
+          ${isPrimary ? "bg-accent-gold/[0.08]" : "bg-white/[0.04]"}
+          transition-all duration-300
         `}
       >
         {renderIcon(link.icon, {
-          size: 20,
+          size: 18,
           className: isPrimary
             ? "text-accent-gold"
-            : "text-text-secondary group-hover:text-text-primary transition-colors duration-200",
+            : "text-white/40 group-hover:text-white/70 transition-colors duration-300",
         })}
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <span className="text-[15px] font-semibold block leading-snug text-text-primary">
+        <span className="text-[14px] font-medium block leading-snug text-white/90 group-hover:text-white transition-colors duration-300">
           {link.label}
         </span>
         {link.description && (
-          <span className="text-[13px] text-text-tertiary block mt-0.5 leading-snug">
+          <span className="text-[12px] text-white/30 block mt-0.5 leading-snug group-hover:text-white/40 transition-colors duration-300">
             {link.description}
           </span>
         )}
@@ -62,10 +58,10 @@ export function LinkCard({ link }: { link: Link }) {
 
       {/* Arrow */}
       {renderIcon("ArrowUpRight", {
-        size: 16,
+        size: 14,
         className: `
-          shrink-0 transition-all duration-200
-          ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
+          shrink-0 transition-all duration-300
+          ${isPrimary ? "text-accent-gold/40 group-hover:text-accent-gold/70" : "text-white/0 group-hover:text-white/30"}
           group-hover:translate-x-0.5 group-hover:-translate-y-0.5
         `,
       })}
