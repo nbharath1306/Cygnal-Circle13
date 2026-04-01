@@ -22,38 +22,58 @@ const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 export function ProfileHero({ member }: { member: TeamMember }) {
   return (
     <section className="relative">
-      {/* Cover — full bleed, cinematic */}
-      <div className="relative h-[380px] sm:h-[420px] w-full overflow-hidden">
+      {/*
+        Cover — atmospheric blur backdrop.
+        Works with ANY photo (portrait, landscape, square).
+        The image is rendered twice:
+        1. Blurred + scaled up → fills the container as ambient color/texture
+        2. Sharp + naturally positioned → visible through a soft vignette
+        This is the Spotify/Apple Music approach.
+      */}
+      <div className="relative h-[340px] sm:h-[380px] w-full overflow-hidden">
         {member.coverPhoto ? (
-          <Image
-            src={member.coverPhoto}
-            alt=""
-            fill
-            priority
-            className="object-cover object-[center_25%] scale-110"
-          />
+          <>
+            {/* Layer 1: Blurred ambient fill — always covers, any aspect ratio */}
+            <Image
+              src={member.coverPhoto}
+              alt=""
+              fill
+              priority
+              className="object-cover scale-150 blur-2xl brightness-75 saturate-[1.2]"
+            />
+            {/* Layer 2: Sharp image, centered, natural positioning */}
+            <Image
+              src={member.coverPhoto}
+              alt=""
+              fill
+              priority
+              className="object-cover object-center"
+            />
+          </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a1610] via-bg-primary to-[#0d0c0a]" />
         )}
-        {/* Bottom fade into background — strong enough to read text over it */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/60 to-transparent" />
-        {/* Top subtle vignette */}
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-transparent" />
-        {/* Gold ambient glow behind photo area */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] h-[200px] bg-accent-gold/[0.04] rounded-full blur-3xl" />
+
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/25 via-transparent to-transparent" />
+        {/* Side vignette for cinematic feel */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,var(--color-bg-primary)_100%)]" />
+        {/* Gold ambient glow */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-accent-gold/[0.03] rounded-full blur-3xl" />
       </div>
 
-      {/* Profile content */}
+      {/* Profile content — overlaps cover */}
       <div className="relative -mt-32 flex flex-col items-center text-center px-6 pb-8">
-        {/* Photo with double-ring gold border */}
+        {/* Profile photo with gold ring */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, ease }}
           className="relative mb-6"
         >
-          {/* Outer glow ring */}
-          <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-accent-gold/25 via-transparent to-accent-gold/25 blur-md" />
+          {/* Outer glow */}
+          <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-accent-gold/20 via-transparent to-accent-gold/20 blur-lg" />
           {/* Gold border ring */}
           <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full p-[2.5px] bg-gradient-to-br from-accent-gold via-accent-gold-bright to-accent-gold">
             <div className="w-full h-full rounded-full overflow-hidden bg-bg-primary ring-2 ring-bg-primary">
@@ -69,7 +89,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
           </div>
         </motion.div>
 
-        {/* Name — big, confident */}
+        {/* Name */}
         <motion.h1
           initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -101,7 +121,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
           {member.bio}
         </motion.p>
 
-        {/* Social icons — prominent, like Linktree */}
+        {/* Social icons */}
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
