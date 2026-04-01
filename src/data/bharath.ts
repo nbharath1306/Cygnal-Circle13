@@ -26,7 +26,6 @@ const bharath: TeamMember = {
           url: "https://circle13.space",
           icon: "Rocket",
           description: "Where ideas become products",
-          isPrimary: true,
         },
         {
           label: "HallowTwin",
