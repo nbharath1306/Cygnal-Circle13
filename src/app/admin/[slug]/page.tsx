@@ -16,7 +16,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useAdminPin } from "../layout";
-import type { TeamMember, Link, LinkSection, SocialLink } from "@/data/types";
+import type { TeamMember, Link, LinkSection, SocialLink, ThemeId } from "@/data/types";
+import { themes } from "@/lib/themes";
 
 // ── Sortable link item ──────────────────────────────────────────
 function SortableLink({
@@ -306,6 +307,32 @@ export default function MemberEditor() {
             onChange={(e) => update({ coverPhoto: e.target.value || undefined })}
             className="input-field"
           />
+        </section>
+
+        {/* ── Theme ─────────────────────────────────────────── */}
+        <section className="admin-section">
+          <h2 className="section-title">Theme</h2>
+          <div className="grid grid-cols-4 gap-2">
+            {themes.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => update({ theme: t.id as ThemeId })}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${
+                  (member.theme ?? "noir") === t.id
+                    ? "border-accent-gold bg-accent-gold-muted"
+                    : "border-border-default hover:border-border-hover"
+                }`}
+              >
+                <div
+                  className="w-6 h-6 rounded-full ring-2 ring-border-default"
+                  style={{ backgroundColor: t.preview }}
+                />
+                <span className="text-[10px] text-text-secondary font-medium">
+                  {t.name}
+                </span>
+              </button>
+            ))}
+          </div>
         </section>
 
         {/* ── Socials ──────────────────────────────────────────── */}

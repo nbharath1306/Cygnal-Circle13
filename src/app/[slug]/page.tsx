@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
-import { getMember, getAllSlugs } from "@/lib/data";
+import { getMember } from "@/lib/data";
 import { ProfileHero } from "@/components/cards/ProfileHero";
 import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
 import { AnimateIn } from "@/components/layout/AnimateIn";
 import { StaggerChildren, StaggerItem } from "@/components/layout/StaggerChildren";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import type { Metadata } from "next";
 
 // Dynamic rendering — data can change via admin dashboard
@@ -42,7 +43,8 @@ export default async function MemberPage({ params }: { params: Params }) {
   }
 
   return (
-    <main className="min-h-dvh max-w-[480px] mx-auto pb-20">
+    <ThemeProvider themeId={member.theme}>
+    <main className="min-h-dvh max-w-[480px] mx-auto pb-20" style={{ backgroundColor: "var(--color-bg-primary)", color: "var(--color-text-primary)" }}>
       {/* Hero — handles its own animations */}
       <ProfileHero member={member} />
 
@@ -98,5 +100,6 @@ export default async function MemberPage({ params }: { params: Params }) {
         </footer>
       </AnimateIn>
     </main>
+    </ThemeProvider>
   );
 }

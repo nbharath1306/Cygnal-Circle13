@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMember, saveMember, getAllSlugs } from "@/lib/data";
+import { getMember, getAllMembers, saveMemberToGitHub } from "@/lib/data";
 import type { TeamMember } from "@/data/types";
 
 function checkPin(request: NextRequest): boolean {
@@ -20,29 +20,34 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(member);
   }
 
-  const slugs = await getAllSlugs();
-  const members: TeamMember[] = [];
-  for (const s of slugs) {
-    const m = await getMember(s);
-    if (m) members.push(m);
-  }
-
+  const members = await getAllMembers();
   return NextResponse.json(members);
 }
 
-// POST /api/members — create or update a member
+// POST /api/members — create or update a member (saves to GitHub)
 export async function POST(request: NextRequest) {
   if (!checkPin(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const member = body as TeamMember;
+  const member = (await request.json()) as TeamMember;
 
   if (!member.slug || !member.name) {
-    return NextResponse.json({ error: "slug and name are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "slug and name are required" },
+      { status: 400 }
+    );
   }
 
-  await saveMember(member);
-  return NextResponse.json({ ok: true, slug: member.slug });
+  try {
+    await saveMemberToGitHub(member);
+    return NextResponse.json({
+      ok: true,
+      slug: member.slug,
+      message: "Saved to GitHub. Vercel will rebuild in ~30 seconds.",
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
