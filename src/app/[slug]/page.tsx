@@ -44,14 +44,14 @@ export default async function MemberPage({ params }: { params: Params }) {
 
   return (
     <ThemeProvider themeId={member.theme}>
-    <main className="min-h-dvh max-w-[480px] mx-auto pb-20" style={{ backgroundColor: "var(--color-bg-primary)", color: "var(--color-text-primary)" }}>
-      {/* Hero — handles its own animations */}
+    <main className="min-h-dvh max-w-[480px] mx-auto pb-24" style={{ backgroundColor: "var(--color-bg-primary)", color: "var(--color-text-primary)" }}>
+      {/* Hero — full viewport immersive */}
       <ProfileHero member={member} />
 
       {/* Link sections */}
-      <div className="flex flex-col gap-10 mt-2">
+      <div className="flex flex-col gap-12 mt-6">
         {member.sections.map((section, i) => (
-          <AnimateIn key={section.id} delay={0.5 + i * 0.12}>
+          <AnimateIn key={section.id} delay={0.4 + i * 0.1}>
             <Section title={section.title}>
               <StaggerChildren>
                 {section.links.map((link) => (
@@ -66,7 +66,7 @@ export default async function MemberPage({ params }: { params: Params }) {
 
         {/* Products */}
         {member.products && member.products.length > 0 && (
-          <AnimateIn delay={0.5 + member.sections.length * 0.12}>
+          <AnimateIn delay={0.4 + member.sections.length * 0.1}>
             <Section title="Products">
               <StaggerChildren>
                 {member.products.map((product) => (
@@ -81,14 +81,14 @@ export default async function MemberPage({ params }: { params: Params }) {
       </div>
 
       {/* Footer */}
-      <AnimateIn delay={0.8 + member.sections.length * 0.12}>
-        <footer className="mt-24 flex flex-col items-center gap-3 px-6">
-          <div className="h-px w-8 bg-[#BFA97A]/10" />
+      <AnimateIn delay={0.7 + member.sections.length * 0.1}>
+        <footer className="mt-20 flex flex-col items-center gap-4 px-6">
+          <div className="glow-line w-12" />
           <a
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[8px] text-white/15 hover:text-[#BFA97A]/40 transition-colors duration-500 tracking-[0.35em] uppercase font-semibold"
+            className="text-[8px] text-white/15 hover:text-[#D4B87A]/50 transition-colors duration-500 tracking-[0.4em] uppercase font-bold"
           >
             Circle13
           </a>
