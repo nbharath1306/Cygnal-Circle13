@@ -44,10 +44,10 @@ export default async function MemberPage({ params }: { params: Params }) {
 
   return (
     <ThemeProvider themeId={member.theme}>
-    <main className="min-h-dvh max-w-[500px] mx-auto pb-20 bg-black text-[#F5F5F7]">
+    <main className="min-h-dvh max-w-[500px] mx-auto pb-20 bg-black text-white">
       <ProfileHero member={member} />
 
-      <div className="flex flex-col gap-8 mt-4">
+      <div className="flex flex-col gap-7 -mt-2 relative z-20">
         {member.sections.map((section, i) => (
           <AnimateIn key={section.id} delay={0.3 + i * 0.08}>
             <Section title={section.title}>
@@ -75,7 +75,7 @@ export default async function MemberPage({ params }: { params: Params }) {
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] text-[#48484A] hover:text-[#86868B] transition-colors duration-200"
+            className="text-[13px] text-white/20 hover:text-white/40 transition-colors duration-200"
           >
             circle13.space
           </a>
