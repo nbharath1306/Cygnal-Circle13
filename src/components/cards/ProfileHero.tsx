@@ -1,20 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import * as LucideIcons from "lucide-react";
+import { icons } from "lucide-react";
 import { motion } from "framer-motion";
 import type { TeamMember } from "@/data/types";
-
-type IconName = keyof typeof LucideIcons;
+import { createElement } from "react";
 
 function getSocialIcon(name: string) {
-  const Icon = LucideIcons[name as IconName] as React.ComponentType<{
-    size?: number;
-    className?: string;
-    strokeWidth?: number;
-  }>;
-  if (!Icon || typeof Icon !== "function") return null;
-  return <Icon size={18} strokeWidth={1.8} />;
+  const iconData = icons[name as keyof typeof icons];
+  if (!iconData) return null;
+  return createElement(iconData, { size: 18, strokeWidth: 1.8 } as React.SVGAttributes<SVGElement>);
 }
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];

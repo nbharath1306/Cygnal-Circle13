@@ -1,26 +1,31 @@
-import * as LucideIcons from "lucide-react";
+import { icons } from "lucide-react";
+import { createElement } from "react";
 import type { Link } from "@/data/types";
 
-type IconName = keyof typeof LucideIcons;
-
 function getIcon(name: string, isPrimary?: boolean) {
-  const Icon = LucideIcons[name as IconName] as React.ComponentType<{
-    size?: number;
-    className?: string;
-    strokeWidth?: number;
-  }>;
-  if (!Icon || typeof Icon !== "function") return null;
-  return (
-    <Icon
-      size={20}
-      strokeWidth={1.8}
-      className={
-        isPrimary
-          ? "text-accent-gold"
-          : "text-text-secondary group-hover:text-text-primary transition-colors duration-200"
-      }
-    />
-  );
+  const iconData = icons[name as keyof typeof icons];
+  if (!iconData) return null;
+  return createElement(iconData, {
+    size: 20,
+    strokeWidth: 1.8,
+    className: isPrimary
+      ? "text-accent-gold"
+      : "text-text-secondary group-hover:text-text-primary transition-colors duration-200",
+  } as React.SVGAttributes<SVGElement>);
+}
+
+function ArrowIcon({ isPrimary }: { isPrimary?: boolean }) {
+  const iconData = icons["ArrowUpRight"];
+  if (!iconData) return null;
+  return createElement(iconData, {
+    size: 16,
+    strokeWidth: 2,
+    className: `
+      shrink-0 transition-all duration-200
+      ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
+      group-hover:translate-x-0.5 group-hover:-translate-y-0.5
+    `,
+  } as React.SVGAttributes<SVGElement>);
 }
 
 export function LinkCard({ link }: { link: Link }) {
@@ -67,11 +72,7 @@ export function LinkCard({ link }: { link: Link }) {
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <span
-          className={`text-[15px] font-semibold block leading-snug ${
-            isPrimary ? "text-text-primary" : "text-text-primary"
-          }`}
-        >
+        <span className="text-[15px] font-semibold block leading-snug text-text-primary">
           {link.label}
         </span>
         {link.description && (
@@ -82,15 +83,7 @@ export function LinkCard({ link }: { link: Link }) {
       </div>
 
       {/* Arrow */}
-      <LucideIcons.ArrowUpRight
-        size={16}
-        strokeWidth={2}
-        className={`
-          shrink-0 transition-all duration-200
-          ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
-          group-hover:translate-x-0.5 group-hover:-translate-y-0.5
-        `}
-      />
+      <ArrowIcon isPrimary={isPrimary} />
     </a>
   );
 }
