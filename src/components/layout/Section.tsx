@@ -6,15 +6,11 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="px-[22px]">
-      {/* Apple grouped list header: 13px, uppercase, secondary label, padded left by 16px */}
-      <p
-        className="text-[13px] font-normal text-[#86868B] mb-[8px] pl-[16px] uppercase"
-        style={{ letterSpacing: "-0.08px" }}
-      >
+    <section className="px-5">
+      <p className="text-[12px] font-medium text-white/35 mb-3 px-1 uppercase tracking-[0.06em]">
         {title}
       </p>
-      <div className="material-group rounded-[18px]">
+      <div className="flex flex-col gap-3">
         {children}
       </div>
     </section>

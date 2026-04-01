@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter } from "@/lib/fonts";
+import { satoshi } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="bg-black text-[#F5F5F7] min-h-dvh font-[family-name:var(--font-apple)]">
+    <html lang="en" className={satoshi.variable}>
+      <body className="min-h-dvh font-[family-name:var(--font-body)]">
         {children}
       </body>
     </html>
