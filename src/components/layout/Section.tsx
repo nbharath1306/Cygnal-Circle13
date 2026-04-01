@@ -7,7 +7,11 @@ export function Section({
 }) {
   return (
     <section>
-      <p className="text-[12px] font-medium text-white/30 mb-3 px-1 uppercase tracking-[0.08em]">
+      {/* iOS grouped list header — 13px, uppercase, secondaryLabel, left padded */}
+      <p
+        className="text-[13px] font-normal uppercase mb-2 px-5"
+        style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}
+      >
         {title}
       </p>
       <div className="flex flex-col gap-3">

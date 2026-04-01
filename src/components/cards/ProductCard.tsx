@@ -4,9 +4,9 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import type { Product } from "@/data/types";
 
 const statusColor: Record<string, string> = {
-  Live: "text-[#30D158]",
-  Beta: "text-[#64D2FF]",
-  "Coming Soon": "text-[#FFD60A]",
+  Live: "#30D158",
+  Beta: "#64D2FF",
+  "Coming Soon": "#FFD60A",
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -19,21 +19,30 @@ export function ProductCard({ product }: { product: Product }) {
     >
       <div className="flex-1 flex items-center justify-between gap-3 w-full">
         <div className="min-w-0 flex-1">
-          <span className="text-[15px] font-medium text-white/90 leading-tight tracking-[0.01em]">
+          <span
+            className="text-[17px] font-normal text-white leading-[22px]"
+            style={{ letterSpacing: "-0.408px" }}
+          >
             {product.name}
           </span>
-          <p className="text-[12px] text-white/35 mt-0.5 leading-tight font-light">
+          <p
+            className="text-[13px] font-normal mt-0.5 leading-[18px]"
+            style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}
+          >
             {product.tagline}
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2">
+        <div className="shrink-0 flex items-center gap-2.5">
           {product.status && (
-            <span className={`text-[12px] font-medium ${statusColor[product.status] ?? "text-white/35"}`}>
+            <span
+              className="text-[13px] font-medium"
+              style={{ letterSpacing: "-0.08px", color: statusColor[product.status] ?? "rgba(235,235,245,0.3)" }}
+            >
               {product.status}
             </span>
           )}
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-            <path d="M1 1L6 6L1 11" stroke="rgba(255,255,255,0.20)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none">
+            <path d="M1.5 1.5L6.5 6.5L1.5 11.5" stroke="rgba(235,235,245,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
