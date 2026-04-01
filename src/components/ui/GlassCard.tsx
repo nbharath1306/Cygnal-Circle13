@@ -5,28 +5,19 @@ import { useRef, useCallback } from "react";
 interface GlassCardProps {
   children: React.ReactNode;
   className?: string;
-  as?: "a" | "div";
   href?: string;
   target?: string;
   rel?: string;
-  onClick?: () => void;
 }
 
-/**
- * Liquid Glass card with cursor-tracking specular highlights.
- *
- * The specular highlight follows the mouse position relative to the card,
- * simulating a real light source hitting curved glass.
- *
- * On touch devices, the highlight centers on press location.
- */
 export function GlassCard({
   children,
   className = "",
-  as = "div",
-  ...props
+  href,
+  target,
+  rel,
 }: GlassCardProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     const el = ref.current;
@@ -45,20 +36,29 @@ export function GlassCard({
     el.style.setProperty("--mouse-y", "30%");
   }, []);
 
-  const Tag = as as React.ElementType;
-
-  return (
-    <Tag
+  const inner = (
+    <div
       ref={ref}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       className={`liquid-glass ${className}`}
-      {...props}
     >
-      {/* Specular highlight — tracks cursor */}
-      <span className="liquid-glass-specular" aria-hidden="true" />
+      {/* Specular highlight */}
+      <div className="liquid-glass-specular" />
       {/* Content */}
-      <span className="relative z-[1] flex items-center w-full">{children}</span>
-    </Tag>
+      <div className="relative z-[1] flex items-center w-full">
+        {children}
+      </div>
+    </div>
   );
+
+  if (href) {
+    return (
+      <a href={href} target={target} rel={rel} className="block">
+        {inner}
+      </a>
+    );
+  }
+
+  return inner;
 }

@@ -7,14 +7,13 @@ import type { Link } from "@/data/types";
 export function LinkCard({ link }: { link: Link }) {
   return (
     <GlassCard
-      as="a"
       href={link.url}
       target={link.url.startsWith("mailto:") ? undefined : "_blank"}
       rel="noopener noreferrer"
-      className="gap-3.5 px-5 py-[15px]"
+      className="gap-3.5 px-5 py-4"
     >
       {/* Icon */}
-      <div className="shrink-0 w-[36px] h-[36px] rounded-[10px] flex items-center justify-center bg-white/[0.08] border border-white/[0.08] shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15)]">
+      <div className="shrink-0 w-[36px] h-[36px] rounded-[10px] flex items-center justify-center bg-white/[0.08]">
         {renderIcon(link.icon, {
           size: 17,
           className: "text-white/70",

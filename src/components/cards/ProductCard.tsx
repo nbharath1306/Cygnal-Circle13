@@ -12,11 +12,10 @@ const statusColor: Record<string, string> = {
 export function ProductCard({ product }: { product: Product }) {
   return (
     <GlassCard
-      as="a"
       href={product.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="px-5 py-[15px]"
+      className="px-5 py-4"
     >
       <div className="flex-1 flex items-center justify-between gap-3 w-full">
         <div className="min-w-0 flex-1">
