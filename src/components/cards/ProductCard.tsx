@@ -16,11 +16,11 @@ export function ProductCard({ product }: { product: Product }) {
       href={product.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="px-5 py-4"
+      className="px-5 py-[15px]"
     >
       <div className="flex-1 flex items-center justify-between gap-3 w-full">
         <div className="min-w-0 flex-1">
-          <span className="text-[15px] font-medium text-white/90 leading-tight">
+          <span className="text-[15px] font-medium text-white/90 leading-tight tracking-[0.01em]">
             {product.name}
           </span>
           <p className="text-[12px] text-white/35 mt-0.5 leading-tight font-light">
@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           )}
           <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-            <path d="M1 1L6 6L1 11" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M1 1L6 6L1 11" stroke="rgba(255,255,255,0.20)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
