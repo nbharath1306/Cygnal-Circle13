@@ -1,3 +1,9 @@
+export interface SocialLink {
+  platform: string;
+  url: string;
+  icon: string;
+}
+
 export interface TeamMember {
   slug: string;
   name: string;
@@ -5,7 +11,9 @@ export interface TeamMember {
   company: string;
   bio: string;
   photo: string;
+  coverPhoto?: string;
   status?: string;
+  socials: SocialLink[];
   sections: LinkSection[];
   products?: Product[];
 }

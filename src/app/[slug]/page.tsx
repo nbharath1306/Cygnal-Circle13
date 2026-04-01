@@ -14,17 +14,21 @@ export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
   const { slug } = await params;
   const member = getTeamMember(slug);
   if (!member) return {};
 
   return {
     title: `${member.name} — ${member.title}, ${member.company}`,
-    description: `Connect with ${member.name}. ${member.bio}. ${member.title} at ${member.company}.`,
+    description: `Connect with ${member.name}. ${member.bio}`,
     openGraph: {
       title: `${member.name} — ${member.company}`,
-      description: `Connect with ${member.name}`,
+      description: member.bio,
       type: "profile",
     },
   };
@@ -39,15 +43,14 @@ export default async function MemberPage({ params }: { params: Params }) {
   }
 
   return (
-    <main className="min-h-dvh max-w-[480px] mx-auto pb-16">
-      <AnimateIn delay={0}>
-        <ProfileHero member={member} />
-      </AnimateIn>
+    <main className="min-h-dvh max-w-[480px] mx-auto pb-20">
+      {/* Hero — handles its own animations */}
+      <ProfileHero member={member} />
 
       {/* Link sections */}
-      <div className="flex flex-col gap-12 mt-4">
-        {member.sections.map((section, sectionIdx) => (
-          <AnimateIn key={section.id} delay={0.3 + sectionIdx * 0.15}>
+      <div className="flex flex-col gap-10 mt-2">
+        {member.sections.map((section, i) => (
+          <AnimateIn key={section.id} delay={0.5 + i * 0.12}>
             <Section title={section.title}>
               <StaggerChildren>
                 {section.links.map((link) => (
@@ -62,7 +65,7 @@ export default async function MemberPage({ params }: { params: Params }) {
 
         {/* Products */}
         {member.products && member.products.length > 0 && (
-          <AnimateIn delay={0.3 + member.sections.length * 0.15}>
+          <AnimateIn delay={0.5 + member.sections.length * 0.12}>
             <Section title="Products">
               <StaggerChildren>
                 {member.products.map((product) => (
@@ -77,20 +80,18 @@ export default async function MemberPage({ params }: { params: Params }) {
       </div>
 
       {/* Footer */}
-      <AnimateIn delay={0.6 + member.sections.length * 0.15}>
-        <div className="mt-16 flex flex-col items-center gap-2">
-          <div className="text-text-tertiary text-sm tracking-wide">
-            &#9670;
-          </div>
+      <AnimateIn delay={0.8 + member.sections.length * 0.12}>
+        <footer className="mt-16 flex flex-col items-center gap-3 px-6">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
           <a
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-text-tertiary hover:text-text-secondary transition-colors"
+            className="text-[11px] text-text-tertiary hover:text-text-accent transition-colors tracking-widest uppercase"
           >
-            circle13.space
+            Circle13
           </a>
-        </div>
+        </footer>
       </AnimateIn>
     </main>
   );
