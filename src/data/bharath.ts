@@ -11,7 +11,7 @@ const bharath: TeamMember = {
   status: "Building in public",
   socials: [
     { platform: "LinkedIn", url: "https://www.linkedin.com/in/n-bharath-2b86311b9/", icon: "Linkedin" },
-    { platform: "WhatsApp", url: "https://wa.me/918618698941", icon: "MessageCircle" },
+    { platform: "WhatsApp", url: "https://wa.me/918618698941", icon: "WhatsApp" },
     { platform: "Instagram", url: "https://www.instagram.com/bharath_theunassailable/", icon: "Instagram" },
     { platform: "X", url: "https://x.com/nbharath_1306", icon: "Twitter" },
     { platform: "Email", url: "mailto:n.bharath3430@gmail.com", icon: "Mail" },

@@ -1,32 +1,5 @@
-import { icons } from "lucide-react";
-import { createElement } from "react";
+import { renderIcon } from "@/lib/icons";
 import type { Link } from "@/data/types";
-
-function getIcon(name: string, isPrimary?: boolean) {
-  const iconData = icons[name as keyof typeof icons];
-  if (!iconData) return null;
-  return createElement(iconData, {
-    size: 20,
-    strokeWidth: 1.8,
-    className: isPrimary
-      ? "text-accent-gold"
-      : "text-text-secondary group-hover:text-text-primary transition-colors duration-200",
-  } as React.SVGAttributes<SVGElement>);
-}
-
-function ArrowIcon({ isPrimary }: { isPrimary?: boolean }) {
-  const iconData = icons["ArrowUpRight"];
-  if (!iconData) return null;
-  return createElement(iconData, {
-    size: 16,
-    strokeWidth: 2,
-    className: `
-      shrink-0 transition-all duration-200
-      ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
-      group-hover:translate-x-0.5 group-hover:-translate-y-0.5
-    `,
-  } as React.SVGAttributes<SVGElement>);
-}
 
 export function LinkCard({ link }: { link: Link }) {
   const isPrimary = link.isPrimary;
@@ -67,7 +40,12 @@ export function LinkCard({ link }: { link: Link }) {
           transition-all duration-200
         `}
       >
-        {getIcon(link.icon, isPrimary)}
+        {renderIcon(link.icon, {
+          size: 20,
+          className: isPrimary
+            ? "text-accent-gold"
+            : "text-text-secondary group-hover:text-text-primary transition-colors duration-200",
+        })}
       </div>
 
       {/* Text */}
@@ -83,7 +61,14 @@ export function LinkCard({ link }: { link: Link }) {
       </div>
 
       {/* Arrow */}
-      <ArrowIcon isPrimary={isPrimary} />
+      {renderIcon("ArrowUpRight", {
+        size: 16,
+        className: `
+          shrink-0 transition-all duration-200
+          ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
+          group-hover:translate-x-0.5 group-hover:-translate-y-0.5
+        `,
+      })}
     </a>
   );
 }

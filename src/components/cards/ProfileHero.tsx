@@ -1,16 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { icons } from "lucide-react";
 import { motion } from "framer-motion";
 import type { TeamMember } from "@/data/types";
-import { createElement } from "react";
-
-function getSocialIcon(name: string) {
-  const iconData = icons[name as keyof typeof icons];
-  if (!iconData) return null;
-  return createElement(iconData, { size: 18, strokeWidth: 1.8 } as React.SVGAttributes<SVGElement>);
-}
+import { renderIcon } from "@/lib/icons";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -139,7 +132,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
                 transition-all duration-250 ease-out
               "
             >
-              {getSocialIcon(social.icon)}
+              {renderIcon(social.icon, { size: 18 })}
             </a>
           ))}
         </motion.div>
