@@ -7,35 +7,38 @@ export function LinkCard({ link }: { link: Link }) {
       href={link.url}
       target={link.url.startsWith("mailto:") ? undefined : "_blank"}
       rel="noopener noreferrer"
-      className="group glass-row flex items-center gap-3.5 px-4 py-3.5"
+      className="group material-row flex items-center gap-3 px-4 py-[13px]"
     >
-      {/* Icon */}
-      <div className="shrink-0 w-[36px] h-[36px] rounded-[10px] flex items-center justify-center bg-white/[0.06]">
+      {/* Icon — Apple Settings style: colored icon in rounded rect */}
+      <div className="shrink-0 w-[30px] h-[30px] rounded-[7px] flex items-center justify-center bg-[#2997FF]">
         {renderIcon(link.icon, {
-          size: 17,
-          className: "text-[#0A84FF]",
+          size: 16,
+          className: "text-white",
         })}
       </div>
 
-      {/* Text */}
+      {/* Text — Apple Body/Subheadline sizing */}
       <div className="flex-1 min-w-0">
-        <span className="text-[15px] font-medium block leading-tight text-white tracking-[-0.01em]">
+        <span
+          className="text-[17px] font-normal block leading-[1.29] text-[#F5F5F7]"
+          style={{ letterSpacing: "-0.408px" }}
+        >
           {link.label}
         </span>
         {link.description && (
-          <span className="text-[12px] text-white/40 block mt-0.5 leading-tight">
+          <span
+            className="text-[13px] text-white/40 block mt-px leading-[1.23]"
+            style={{ letterSpacing: "-0.08px" }}
+          >
             {link.description}
           </span>
         )}
       </div>
 
-      {/* Chevron */}
-      <div className="shrink-0">
-        {renderIcon("ChevronRight", {
-          size: 16,
-          className: "text-white/20 group-hover:text-white/40 transition-colors duration-200",
-        })}
-      </div>
+      {/* Disclosure indicator — Apple's exact pattern */}
+      <svg width="7" height="12" viewBox="0 0 7 12" fill="none" className="shrink-0 text-white/20">
+        <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </a>
   );
 }

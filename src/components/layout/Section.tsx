@@ -7,10 +7,14 @@ export function Section({
 }) {
   return (
     <section className="px-5">
-      <p className="text-[13px] font-semibold text-white/40 mb-2 px-2 uppercase tracking-[0.02em]">
+      {/* Apple grouped list header — 13px semibold, uppercased, secondary color, left-padded */}
+      <p
+        className="text-[13px] font-normal text-white/40 mb-[7px] px-4 uppercase"
+        style={{ letterSpacing: "-0.08px" }}
+      >
         {title}
       </p>
-      <div className="glass-group">
+      <div className="material-group">
         {children}
       </div>
     </section>

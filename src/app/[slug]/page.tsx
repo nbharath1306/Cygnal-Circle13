@@ -47,7 +47,7 @@ export default async function MemberPage({ params }: { params: Params }) {
     <main className="min-h-dvh max-w-[500px] mx-auto pb-20 bg-black text-white">
       <ProfileHero member={member} />
 
-      <div className="flex flex-col gap-7 -mt-2 relative z-20">
+      <div className="flex flex-col gap-8 mt-2 relative z-20">
         {member.sections.map((section, i) => (
           <AnimateIn key={section.id} delay={0.3 + i * 0.08}>
             <Section title={section.title}>

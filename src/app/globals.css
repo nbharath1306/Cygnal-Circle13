@@ -2,24 +2,24 @@
 
 @theme {
   --color-bg-primary: #000000;
-  --color-bg-elevated: rgba(255, 255, 255, 0.06);
-  --color-bg-subtle: rgba(255, 255, 255, 0.10);
-  --color-bg-card: rgba(255, 255, 255, 0.06);
+  --color-bg-elevated: rgba(36, 36, 38, 0.65);
+  --color-bg-subtle: rgba(54, 54, 56, 0.50);
+  --color-bg-card: rgba(36, 36, 38, 0.65);
 
-  --color-border-default: rgba(255, 255, 255, 0.12);
-  --color-border-hover: rgba(255, 255, 255, 0.20);
-  --color-border-accent: rgba(10, 132, 255, 0.4);
+  --color-border-default: rgba(255, 255, 255, 0.10);
+  --color-border-hover: rgba(255, 255, 255, 0.18);
+  --color-border-accent: rgba(10, 132, 255, 0.5);
 
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: rgba(255, 255, 255, 0.55);
-  --color-text-tertiary: rgba(255, 255, 255, 0.30);
-  --color-text-accent: #0A84FF;
+  --color-text-primary: #F5F5F7;
+  --color-text-secondary: rgba(255, 255, 255, 0.56);
+  --color-text-tertiary: rgba(255, 255, 255, 0.32);
+  --color-text-accent: #2997FF;
 
-  --color-accent-gold: #0A84FF;
+  --color-accent-gold: #2997FF;
   --color-accent-gold-hover: #409CFF;
-  --color-accent-gold-muted: rgba(10, 132, 255, 0.1);
-  --color-accent-gold-glow: rgba(10, 132, 255, 0.15);
-  --color-accent-gold-bright: #64B5F6;
+  --color-accent-gold-muted: rgba(10, 132, 255, 0.12);
+  --color-accent-gold-glow: rgba(10, 132, 255, 0.18);
+  --color-accent-gold-bright: #6CB4FF;
 
   --color-status-live: #30D158;
   --color-status-beta: #64D2FF;
@@ -30,102 +30,111 @@
   --font-body: var(--font-apple);
 }
 
-html { background: #000; color: #fff; }
+html { background: #000; color: #F5F5F7; }
+
 body {
-  font-family: var(--font-apple), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-family: var(--font-apple), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Apple uses -0.022em tracking on body by default */
+  letter-spacing: -0.022em;
 }
-::selection { background: rgba(10,132,255,0.35); color: #fff; }
+
+::selection { background: rgba(10, 132, 255, 0.4); color: #fff; }
 ::-webkit-scrollbar { width: 0; }
 
-/* ── Glass materials — visionOS style ── */
-.glass {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
-  -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
-  border: 0.5px solid rgba(255, 255, 255, 0.15);
+/* ══════════════════════════════════════════════════
+   APPLE GLASS MATERIALS (from visionOS HIG)
+   ══════════════════════════════════════════════════ */
+
+/* Regular material — used for most panels */
+.material-regular {
+  background: rgba(36, 36, 38, 0.65);
+  backdrop-filter: blur(50px) saturate(210%);
+  -webkit-backdrop-filter: blur(50px) saturate(210%);
+  border: 0.33px solid rgba(255, 255, 255, 0.10);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+    0 0 0 0.33px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.16);
 }
 
-.glass-hover:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.22);
+/* Thick material — hero panels, prominent surfaces */
+.material-thick {
+  background: rgba(50, 50, 52, 0.72);
+  backdrop-filter: blur(60px) saturate(230%);
+  -webkit-backdrop-filter: blur(60px) saturate(230%);
+  border: 0.33px solid rgba(255, 255, 255, 0.14);
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.35),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.15);
+    0 0 0 0.33px rgba(0, 0, 0, 0.25),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 24px 60px rgba(0, 0, 0, 0.2);
 }
 
-.glass-subtle {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(30px) saturate(1.5);
-  -webkit-backdrop-filter: blur(30px) saturate(1.5);
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
+/* Thin material — subtle backgrounds */
+.material-thin {
+  background: rgba(30, 30, 32, 0.45);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.33px solid rgba(255, 255, 255, 0.06);
 }
 
-.glass-bright {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(50px) saturate(2) brightness(1.2);
-  -webkit-backdrop-filter: blur(50px) saturate(2) brightness(1.2);
-  border: 0.5px solid rgba(255, 255, 255, 0.2);
+/* ── Grouped list (iOS Settings pattern) ── */
+.material-group {
+  border-radius: 13px;
+  overflow: hidden;
+  background: rgba(36, 36, 38, 0.65);
+  backdrop-filter: blur(50px) saturate(210%);
+  -webkit-backdrop-filter: blur(50px) saturate(210%);
+  border: 0.33px solid rgba(255, 255, 255, 0.10);
   box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 0 0 0.33px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.16);
 }
 
-/* ── Animations ── */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+/* Row separator — Apple uses separator color with inset */
+.material-group > *:not(:last-child) {
+  border-bottom: 0.33px solid rgba(84, 84, 88, 0.65);
 }
-@keyframes pulse-dot {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
+
+/* Row hover/active — Apple's systemFill colors */
+.material-row {
+  transition: background-color 0.15s ease;
+}
+.material-row:hover {
+  background-color: rgba(120, 120, 128, 0.12);
+}
+.material-row:active {
+  background-color: rgba(120, 120, 128, 0.24);
+  transition-duration: 0.04s;
+}
+
+/* ── Animations — Apple's spring curves ── */
+@keyframes materialIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes pulseAlive {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 @keyframes ambient {
-  0%, 100% { transform: translate(-50%, 0) scale(1); opacity: 0.3; }
-  50% { transform: translate(-50%, -3%) scale(1.08); opacity: 0.5; }
+  0%, 100% { transform: translate(-50%, 0) scale(1); opacity: 0.2; }
+  50% { transform: translate(-50%, -2%) scale(1.04); opacity: 0.35; }
 }
-.ambient { animation: ambient 10s ease-in-out infinite; }
-.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-
-/* ── Grouped glass list ── */
-.glass-group {
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(40px) saturate(1.8);
-  -webkit-backdrop-filter: blur(40px) saturate(1.8);
-  border: 0.5px solid rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
-}
-
-.glass-group > *:not(:last-child) {
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
-}
-
-.glass-row {
-  transition: background 0.15s ease;
-}
-.glass-row:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-.glass-row:active {
-  background: rgba(255, 255, 255, 0.10);
-}
+.ambient { animation: ambient 12s ease-in-out infinite; }
+.pulse-alive { animation: pulseAlive 2s ease-in-out infinite; }
 
 /* ── Admin ── */
-.admin-section { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.06); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 0.5px solid rgba(255,255,255,0.12); }
-.section-title { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.5); }
-.input-field { width: 100%; padding: 0.625rem 0.875rem; border-radius: 10px; background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1); font-size: 0.9375rem; color: #fff; outline: none; transition: all 0.2s; }
+.admin-section { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; border-radius: 13px; background: rgba(36,36,38,0.65); backdrop-filter: blur(50px) saturate(210%); -webkit-backdrop-filter: blur(50px) saturate(210%); border: 0.33px solid rgba(255,255,255,0.10); }
+.section-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.56); letter-spacing: -0.008em; }
+.input-field { width: 100%; padding: 11px 14px; border-radius: 10px; background: rgba(120,120,128,0.12); border: 0.33px solid rgba(255,255,255,0.06); font-size: 17px; letter-spacing: -0.408px; color: #F5F5F7; outline: none; transition: all 0.2s; }
 .input-field::placeholder { color: rgba(255,255,255,0.25); }
-.input-field:focus { border-color: rgba(10,132,255,0.5); box-shadow: 0 0 0 3px rgba(10,132,255,0.15); }
-.add-btn { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 0.875rem; border-radius: 10px; font-size: 0.8125rem; font-weight: 500; color: #0A84FF; background: rgba(10,132,255,0.1); border: none; transition: all 0.15s; }
-.add-btn:hover { background: rgba(10,132,255,0.18); }
+.input-field:focus { border-color: #2997FF; box-shadow: 0 0 0 3.5px rgba(10,132,255,0.25); }
+.add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; font-size: 15px; font-weight: 600; color: #2997FF; background: rgba(10,132,255,0.12); border: none; letter-spacing: -0.24px; transition: all 0.15s; }
+.add-btn:hover { background: rgba(10,132,255,0.2); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
