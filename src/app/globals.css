@@ -85,15 +85,14 @@ body {
   isolation: isolate;
   overflow: hidden;
   will-change: transform;
-  /* iOS 26 corner radius — more rounded than ever */
   border-radius: 24px;
-  /* Depth */
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  /* Outer depth shadow */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s;
 }
 
 .liquid-glass:hover {
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
 }
 
 .liquid-glass:active {
@@ -101,7 +100,7 @@ body {
   transition: transform 0.08s;
 }
 
-/* Refraction layer */
+/* Layer 1: SVG distortion filter on backdrop */
 .liquid-glass::after {
   content: "";
   position: absolute; inset: 0; z-index: -1;
@@ -110,27 +109,30 @@ body {
   -webkit-backdrop-filter: url(#liquid-glass-card) blur(1px);
 }
 
-/* Glass body — tint + inner shadows */
+/* Layer 2: Glass body — VISIBLE tint + bright inner glow */
 .liquid-glass::before {
   content: "";
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.06);
+  /* More visible white fill — you should SEE the glass */
+  background: rgba(255, 255, 255, 0.12);
+  /* Bright inner glow — 0.7 opacity like liquid-glass.pro */
   box-shadow:
-    inset 0 0 20px -5px rgba(255, 255, 255, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+    inset 0 0 20px -5px rgba(255, 255, 255, 0.70),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.10);
+  /* Visible border */
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .liquid-glass:hover::before {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.18);
   box-shadow:
-    inset 0 0 24px -4px rgba(255, 255, 255, 0.50),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.36);
+    inset 0 0 24px -4px rgba(255, 255, 255, 0.80),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 /* vanilla-tilt glare — inherit card curves */
@@ -161,12 +163,12 @@ body {
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.10);
   box-shadow:
-    inset 0 0 24px -5px rgba(255, 255, 255, 0.40),
-    inset 0 1px 0 rgba(255, 255, 255, 0.20),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.24);
+    inset 0 0 24px -5px rgba(255, 255, 255, 0.65),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.30);
 }
 
 /* ── Materialization ── */
