@@ -4,6 +4,7 @@ import { ProfileHero } from "@/components/cards/ProfileHero";
 import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
+import { GyroPermission } from "@/components/ui/GyroPermission";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -89,6 +90,9 @@ export default async function MemberPage({ params }: { params: Params }) {
           </a>
         </footer>
       </div>
+
+      {/* iOS gyroscope permission prompt */}
+      <GyroPermission />
     </main>
   );
 }
