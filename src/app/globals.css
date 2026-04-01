@@ -109,30 +109,29 @@ body {
   -webkit-backdrop-filter: url(#liquid-glass-card) blur(1px);
 }
 
-/* Layer 2: Glass body — VISIBLE tint + bright inner glow */
+/* Layer 2: Glass body — CLEAR center, glow at EDGES only */
 .liquid-glass::before {
   content: "";
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  /* More visible white fill — you should SEE the glass */
-  background: rgba(255, 255, 255, 0.12);
-  /* Bright inner glow — 0.7 opacity like liquid-glass.pro */
+  /* NO flat tint — glass is clear, not grey */
+  background: transparent;
+  /* Inner glow at edges only — this IS the glass */
   box-shadow:
-    inset 0 0 20px -5px rgba(255, 255, 255, 0.70),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.10);
-  /* Visible border */
-  border: 1px solid rgba(255, 255, 255, 0.35);
+    inset 0 0 20px -5px rgba(255, 255, 255, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.30);
 }
 
 .liquid-glass:hover::before {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
   box-shadow:
-    inset 0 0 24px -4px rgba(255, 255, 255, 0.80),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.45);
+    inset 0 0 24px -4px rgba(255, 255, 255, 0.70),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.40);
 }
 
 /* vanilla-tilt glare — inherit card curves */
@@ -163,12 +162,12 @@ body {
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.10);
+  background: transparent;
   box-shadow:
-    inset 0 0 24px -5px rgba(255, 255, 255, 0.65),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.30),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.30);
+    inset 0 0 28px -6px rgba(255, 255, 255, 0.50),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* ── Materialization ── */
