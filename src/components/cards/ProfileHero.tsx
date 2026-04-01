@@ -5,102 +5,100 @@ import { motion } from "framer-motion";
 import type { TeamMember } from "@/data/types";
 import { renderIcon } from "@/lib/icons";
 
-/* Apple's spring animation — damping: 20, stiffness: 300 equivalent */
-const spring = { type: "spring" as const, damping: 25, stiffness: 200 };
-const ease = [0.42, 0, 0.58, 1] as [number, number, number, number];
+/* Apple's cubic-bezier: cubic-bezier(0.25, 0.1, 0.25, 1) */
+const appleEase = [0.25, 0.1, 0.25, 1] as [number, number, number, number];
 
 export function ProfileHero({ member }: { member: TeamMember }) {
   return (
     <section className="relative overflow-hidden">
-      <div className="relative min-h-[100dvh] w-full overflow-hidden flex items-end justify-center pb-10 px-5">
-        {/* Background image */}
+      <div className="relative min-h-[100dvh] w-full overflow-hidden flex items-end justify-center pb-12 px-[22px]">
+        {/* Background */}
         {member.coverPhoto ? (
           <>
             <Image src={member.coverPhoto} alt="" fill priority
-              className="object-cover scale-[1.2] blur-[20px] brightness-[0.1]" />
+              className="object-cover scale-[1.15] blur-[18px] brightness-[0.08]" />
             <Image src={member.coverPhoto} alt="" fill priority
-              className="object-cover object-center brightness-[0.4]" />
+              className="object-cover object-center brightness-[0.35]" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] via-black to-black" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1d1d1f] via-black to-black" />
         )}
 
-        {/* Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-black/30" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_55%,transparent,black)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/30" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_50%,transparent,black)]" />
 
-        {/* Ambient */}
-        <div className="absolute bottom-0 left-1/2 w-[600px] h-[400px] rounded-full bg-[#2997FF]/[0.02] blur-[100px] ambient" />
+        {/* Subtle blue ambient */}
+        <div className="absolute bottom-0 left-1/2 w-[600px] h-[400px] rounded-full bg-[#2997FF]/[0.015] blur-[100px] ambient" />
 
-        {/* ═══ Floating glass panel ═══ */}
+        {/* ═══ Glass hero card — apple.com marketing scale ═══ */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 12 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={spring}
-          className="relative z-10 w-full max-w-[400px]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: appleEase }}
+          className="relative z-10 w-full max-w-[420px]"
         >
-          <div className="material-thick rounded-[22px] p-8 flex flex-col items-center text-center">
+          <div className="material-thick rounded-[28px] px-8 pt-10 pb-8 flex flex-col items-center text-center">
 
-            {/* Photo — Apple contact card style */}
+            {/* Photo */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ ...spring, delay: 0.1 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: appleEase }}
             >
-              <div className="w-[76px] h-[76px] rounded-full overflow-hidden ring-[2.5px] ring-white/[0.12] shadow-[0_2px_16px_rgba(0,0,0,0.3)]">
+              <div className="w-[88px] h-[88px] rounded-full overflow-hidden ring-[2px] ring-white/[0.15] shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
                 <Image
                   src={member.photo}
                   alt={member.name}
-                  width={76}
-                  height={76}
+                  width={88}
+                  height={88}
                   priority
                   className="rounded-full object-cover w-full h-full"
                 />
               </div>
             </motion.div>
 
-            {/* Name — Apple Large Title: 34pt bold +0.374 tracking */}
+            {/* Name — apple.com hero scale: 48px mobile, bold, tight */}
             <motion.h1
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15, ease }}
-              className="mt-5 text-[28px] sm:text-[34px] font-bold text-[#F5F5F7] leading-[1.06]"
-              style={{ letterSpacing: "0.374px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease: appleEase }}
+              className="mt-6 text-[40px] sm:text-[48px] font-bold text-[#F5F5F7] leading-[1.05]"
+              style={{ letterSpacing: "-0.015em" }}
             >
               {member.name}
             </motion.h1>
 
-            {/* Title — Apple Subheadline: 15pt regular -0.24 tracking */}
+            {/* Subtitle — apple.com subheadline: 21px, semibold */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.22, ease }}
-              className="mt-1.5 text-[15px] font-normal text-white/56"
-              style={{ letterSpacing: "-0.24px" }}
+              transition={{ duration: 0.5, delay: 0.25, ease: appleEase }}
+              className="mt-2 text-[19px] sm:text-[21px] font-semibold text-[#86868B]"
+              style={{ letterSpacing: "0.011em" }}
             >
-              {member.title}<span className="text-white/25 mx-1.5">·</span>{member.company}
+              {member.title}<span className="text-white/15 mx-2">·</span>{member.company}
             </motion.p>
 
-            {/* Bio — Apple Body: 17pt regular -0.408 tracking */}
+            {/* Bio — apple.com body text */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.28, ease }}
-              className="mt-4 text-[15px] text-white/40 max-w-[300px] leading-[1.47]"
-              style={{ letterSpacing: "-0.24px" }}
+              transition={{ duration: 0.5, delay: 0.35, ease: appleEase }}
+              className="mt-4 text-[17px] text-[#86868B] max-w-[320px] leading-[1.47]"
+              style={{ letterSpacing: "-0.022em" }}
             >
               {member.bio}
             </motion.p>
 
-            {/* Divider */}
-            <div className="w-full h-[0.33px] bg-[rgba(84,84,88,0.65)] my-5" />
+            {/* Divider — Apple separator */}
+            <div className="w-full h-[0.33px] bg-[rgba(84,84,88,0.65)] mt-7 mb-6" />
 
-            {/* Social icons — Apple contact card action buttons */}
+            {/* Social action buttons — Apple Contact Card style */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.35, ease }}
-              className="flex items-center gap-3 w-full justify-center"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.45, ease: appleEase }}
+              className="flex items-stretch gap-2.5 w-full"
             >
               {member.socials.map((social) => (
                 <a
@@ -110,20 +108,20 @@ export function ProfileHero({ member }: { member: TeamMember }) {
                   rel="noopener noreferrer"
                   aria-label={social.platform}
                   className="
-                    flex flex-col items-center gap-1.5
-                    w-[52px] py-2 rounded-[12px]
+                    flex-1 flex flex-col items-center justify-center gap-1.5
+                    py-3 rounded-[14px]
                     bg-[rgba(120,120,128,0.12)]
                     hover:bg-[rgba(120,120,128,0.2)]
-                    active:bg-[rgba(120,120,128,0.3)]
+                    active:bg-[rgba(120,120,128,0.32)]
+                    active:scale-[0.96]
                     transition-all duration-150
-                    active:scale-95
                   "
                 >
                   <span className="text-[#2997FF]">
-                    {renderIcon(social.icon, { size: 18 })}
+                    {renderIcon(social.icon, { size: 20 })}
                   </span>
-                  <span className="text-[9px] text-white/40 font-medium leading-none" style={{ letterSpacing: "0.1px" }}>
-                    {social.platform.length > 6 ? social.platform.slice(0, 5) : social.platform}
+                  <span className="text-[10px] text-[#86868B] font-medium">
+                    {social.platform.length > 7 ? social.platform.slice(0, 6) : social.platform}
                   </span>
                 </a>
               ))}
@@ -132,17 +130,17 @@ export function ProfileHero({ member }: { member: TeamMember }) {
         </motion.div>
       </div>
 
-      {/* Status — below the card */}
+      {/* Status */}
       {member.status && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5, ease }}
-          className="flex justify-center py-4"
+          transition={{ duration: 0.5, delay: 0.6, ease: appleEase }}
+          className="flex justify-center py-5"
         >
-          <div className="flex items-center gap-2">
-            <span className="w-[6px] h-[6px] rounded-full bg-[#30D158] pulse-alive" />
-            <span className="text-[13px] text-white/40 font-normal" style={{ letterSpacing: "-0.08px" }}>
+          <div className="flex items-center gap-2.5">
+            <span className="w-[7px] h-[7px] rounded-full bg-[#30D158] pulse-alive" />
+            <span className="text-[15px] text-[#86868B]" style={{ letterSpacing: "-0.24px" }}>
               {member.status}
             </span>
           </div>

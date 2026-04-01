@@ -82,7 +82,7 @@ body {
 
 /* ── Grouped list (iOS Settings pattern) ── */
 .material-group {
-  border-radius: 13px;
+  border-radius: 18px;
   overflow: hidden;
   background: rgba(36, 36, 38, 0.65);
   backdrop-filter: blur(50px) saturate(210%);
