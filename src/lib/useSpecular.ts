@@ -3,69 +3,88 @@
 import { useRef, useCallback, useEffect } from "react";
 
 /**
- * Apple Liquid Glass tilt effect.
+ * Apple Liquid Glass tilt — iOS 26 style.
  *
- * SUBTLE. Apple's tilt is barely perceptible — the specular highlight
- * shifts gently, the card itself barely moves. If you can obviously
- * see it rotating, it's too much.
+ * What Apple actually does (from Gizmodo, AppleMagazine, Apple docs):
+ * - Two corner glows: top-left bright, bottom-right subtle
+ * - When you tilt, these glows shift slightly — creating a
+ *   parallax illusion of depth ("the thinnest layer of depth")
+ * - The effect is "the subtlest" — perception of tilt, not actual
+ *   dramatic movement
+ * - Against dark backgrounds the glow is more visible
  *
- * Desktop: global mouse position shifts specular gently.
- * Mobile: gyroscope shifts specular gently.
- * That's it. No dramatic 3D rotation.
+ * Implementation:
+ * - --glow-shift-x, --glow-shift-y: how much the corner glows
+ *   shift from their default positions (in px)
+ * - Very subtle physical tilt (±0.3°) for depth perception
+ * - iOS permission requested on FIRST TAP anywhere (invisible)
+ * - Android auto-starts, no permission needed
+ * - Desktop: mouse position drives the shift gently
  */
 
-// ── Global gyroscope ──
-let gyroActive = false;
-let gyroNormX = 0; // -1 to 1
-let gyroNormY = 0;
+// ── Global state ──
+let tiltX = 0; // -1 to 1
+let tiltY = 0;
+let gyroStarted = false;
+let permissionRequested = false;
 
-function startGyro() {
-  window.addEventListener(
-    "deviceorientation",
-    (e) => {
-      if (e.gamma === null || e.beta === null) return;
-      gyroActive = true;
-      // Very gentle mapping — ±20° of tilt = full range
-      gyroNormX = Math.max(-1, Math.min(1, e.gamma / 20));
-      gyroNormY = Math.max(-1, Math.min(1, (e.beta - 45) / 20));
-    },
-    { passive: true }
-  );
+function onOrientation(e: DeviceOrientationEvent) {
+  if (e.gamma === null || e.beta === null) return;
+  gyroStarted = true;
+  tiltX = Math.max(-1, Math.min(1, e.gamma / 25));
+  tiltY = Math.max(-1, Math.min(1, (e.beta - 45) / 25));
 }
 
-export async function requestGyroPermission(): Promise<boolean> {
+function startListening() {
+  window.addEventListener("deviceorientation", onOrientation, { passive: true });
+}
+
+// iOS: request permission on first user interaction (tap anywhere)
+async function tryRequestPermission() {
+  if (permissionRequested) return;
+  permissionRequested = true;
+
   const DOE = DeviceOrientationEvent as unknown as {
     requestPermission?: () => Promise<string>;
   };
+
   if (typeof DOE.requestPermission === "function") {
     try {
-      const perm = await DOE.requestPermission();
-      if (perm === "granted") { startGyro(); return true; }
-      return false;
-    } catch { return false; }
+      const result = await DOE.requestPermission();
+      if (result === "granted") startListening();
+    } catch { /* denied or error — fail silently */ }
+  } else {
+    // Android / non-iOS — just start
+    startListening();
   }
-  startGyro();
-  return true;
 }
 
 if (typeof window !== "undefined") {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  if (!isIOS) startGyro();
-}
 
-// ── Global mouse (desktop) ──
-let mouseNormX = 0; // -1 to 1
-let mouseNormY = 0;
+  if (isIOS) {
+    // Request on first tap — invisible to user
+    const handler = () => {
+      tryRequestPermission();
+      document.removeEventListener("touchstart", handler);
+      document.removeEventListener("click", handler);
+    };
+    document.addEventListener("touchstart", handler, { once: true, passive: true });
+    document.addEventListener("click", handler, { once: true });
+  } else {
+    startListening();
+  }
 
-if (typeof window !== "undefined") {
+  // Desktop fallback: mouse position
   window.addEventListener("mousemove", (e) => {
-    mouseNormX = (e.clientX / window.innerWidth) * 2 - 1;
-    mouseNormY = (e.clientY / window.innerHeight) * 2 - 1;
+    if (gyroStarted) return;
+    tiltX = ((e.clientX / window.innerWidth) * 2 - 1) * 0.6;
+    tiltY = ((e.clientY / window.innerHeight) * 2 - 1) * 0.6;
   }, { passive: true });
 }
 
-// ── Per-card hook ──
+// ── Per-element hook ──
 export function useSpecular() {
   const ref = useRef<HTMLDivElement>(null);
   const current = useRef({ x: 0, y: 0 });
@@ -77,28 +96,20 @@ export function useSpecular() {
     const el = ref.current;
     if (!el) return;
 
-    const targetX = gyroActive ? gyroNormX : mouseNormX;
-    const targetY = gyroActive ? gyroNormY : mouseNormY;
-
-    // Very slow lerp — the light drifts, doesn't snap
-    current.current.x = lerp(current.current.x, targetX, 0.06);
-    current.current.y = lerp(current.current.y, targetY, 0.06);
+    // Smooth trailing
+    current.current.x = lerp(current.current.x, tiltX, 0.05);
+    current.current.y = lerp(current.current.y, tiltY, 0.05);
 
     const cx = current.current.x;
     const cy = current.current.y;
 
-    // Specular position: 30-70% range (gentle shift, not extreme)
-    el.style.setProperty("--spec-x", `${50 + cx * 20}%`);
-    el.style.setProperty("--spec-y", `${35 + cy * 15}%`);
+    // Corner glow shift — max ±6px
+    el.style.setProperty("--glow-shift-x", `${cx * 6}px`);
+    el.style.setProperty("--glow-shift-y", `${cy * 6}px`);
 
-    // Tilt for directional border: raw -1 to 1
-    el.style.setProperty("--tilt-x", `${cx}`);
-    el.style.setProperty("--tilt-y", `${cy}`);
-
-    // Physical tilt — BARELY PERCEPTIBLE. ±0.5° max.
-    const rotY = cx * 0.5;
-    const rotX = -cy * 0.4;
-    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    // Physical tilt — ±0.3° max, barely perceptible
+    el.style.transform =
+      `perspective(1200px) rotateY(${cx * 0.3}deg) rotateX(${-cy * 0.3}deg)`;
 
     raf.current = requestAnimationFrame(animate);
   }, []);
@@ -109,4 +120,10 @@ export function useSpecular() {
   }, [animate]);
 
   return { ref };
+}
+
+// Re-export for backward compat
+export async function requestGyroPermission(): Promise<boolean> {
+  await tryRequestPermission();
+  return gyroStarted;
 }
