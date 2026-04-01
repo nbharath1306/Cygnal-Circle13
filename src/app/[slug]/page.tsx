@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTeamMember, getAllSlugs } from "@/data/team";
+import { getMember, getAllSlugs } from "@/lib/data";
 import { ProfileHero } from "@/components/cards/ProfileHero";
 import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
@@ -8,11 +8,10 @@ import { AnimateIn } from "@/components/layout/AnimateIn";
 import { StaggerChildren, StaggerItem } from "@/components/layout/StaggerChildren";
 import type { Metadata } from "next";
 
-type Params = Promise<{ slug: string }>;
+// Dynamic rendering — data can change via admin dashboard
+export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
-}
+type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({
   params,
@@ -20,7 +19,7 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const member = getTeamMember(slug);
+  const member = await getMember(slug);
   if (!member) return {};
 
   return {
@@ -36,7 +35,7 @@ export async function generateMetadata({
 
 export default async function MemberPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const member = getTeamMember(slug);
+  const member = await getMember(slug);
 
   if (!member) {
     notFound();
