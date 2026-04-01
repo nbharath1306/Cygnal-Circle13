@@ -23,27 +23,28 @@ export function ProfileHero({ member }: { member: TeamMember }) {
   return (
     <section className="relative">
       {/* Cover — full bleed, cinematic */}
-      <div className="relative h-[320px] sm:h-[360px] w-full overflow-hidden">
+      <div className="relative h-[380px] sm:h-[420px] w-full overflow-hidden">
         {member.coverPhoto ? (
           <Image
             src={member.coverPhoto}
             alt=""
             fill
             priority
-            className="object-cover object-top scale-105"
+            className="object-cover object-[center_25%] scale-110"
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a1610] via-bg-primary to-[#0d0c0a]" />
         )}
-        {/* Warm gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-bg-primary/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/40 via-transparent to-transparent" />
+        {/* Bottom fade into background — strong enough to read text over it */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/60 to-transparent" />
+        {/* Top subtle vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-transparent" />
         {/* Gold ambient glow behind photo area */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[280px] h-[200px] bg-accent-gold/[0.04] rounded-full blur-3xl" />
       </div>
 
       {/* Profile content */}
-      <div className="relative -mt-28 flex flex-col items-center text-center px-6 pb-8">
+      <div className="relative -mt-32 flex flex-col items-center text-center px-6 pb-8">
         {/* Photo with double-ring gold border */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
