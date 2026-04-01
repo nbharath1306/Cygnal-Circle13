@@ -3,36 +3,31 @@
 import { useRef, useCallback, useEffect } from "react";
 
 /**
- * Apple-style Liquid Glass specular effect.
+ * Apple Liquid Glass tilt effect.
  *
- * This doesn't just move a dot — it drives:
- * 1. --spec-x, --spec-y: position of the light source (0-100%)
- * 2. --spec-intensity: how bright the reflection is (0-1)
- * 3. --tilt-x, --tilt-y: normalized tilt for directional border lighting
- * 4. Subtle CSS transform for physical glass tilt
+ * SUBTLE. Apple's tilt is barely perceptible — the specular highlight
+ * shifts gently, the card itself barely moves. If you can obviously
+ * see it rotating, it's too much.
  *
- * On desktop: driven by cursor position relative to viewport.
- * On mobile: driven by device gyroscope.
+ * Desktop: global mouse position shifts specular gently.
+ * Mobile: gyroscope shifts specular gently.
+ * That's it. No dramatic 3D rotation.
  */
 
 // ── Global gyroscope ──
-let gyroGranted = false;
-let gyroX = 50;
-let gyroY = 50;
-let gyroTiltX = 0; // -1 to 1
-let gyroTiltY = 0; // -1 to 1
+let gyroActive = false;
+let gyroNormX = 0; // -1 to 1
+let gyroNormY = 0;
 
 function startGyro() {
   window.addEventListener(
     "deviceorientation",
     (e) => {
       if (e.gamma === null || e.beta === null) return;
-      gyroGranted = true;
-      // Full range mapping — dramatic, visible movement
-      gyroTiltX = Math.max(-1, Math.min(1, e.gamma / 30));
-      gyroTiltY = Math.max(-1, Math.min(1, (e.beta - 40) / 30));
-      gyroX = 50 + gyroTiltX * 45; // 5-95% range
-      gyroY = 50 + gyroTiltY * 40; // 10-90% range
+      gyroActive = true;
+      // Very gentle mapping — ±20° of tilt = full range
+      gyroNormX = Math.max(-1, Math.min(1, e.gamma / 20));
+      gyroNormY = Math.max(-1, Math.min(1, (e.beta - 45) / 20));
     },
     { passive: true }
   );
@@ -53,28 +48,27 @@ export async function requestGyroPermission(): Promise<boolean> {
   return true;
 }
 
-// Auto-start on non-iOS
 if (typeof window !== "undefined") {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (!isIOS) startGyro();
 }
 
-// ── Global mouse position (for desktop) ──
-let mouseVX = 50; // viewport-relative X (0-100)
-let mouseVY = 50;
+// ── Global mouse (desktop) ──
+let mouseNormX = 0; // -1 to 1
+let mouseNormY = 0;
 
 if (typeof window !== "undefined") {
   window.addEventListener("mousemove", (e) => {
-    mouseVX = (e.clientX / window.innerWidth) * 100;
-    mouseVY = (e.clientY / window.innerHeight) * 100;
+    mouseNormX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseNormY = (e.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
 }
 
 // ── Per-card hook ──
 export function useSpecular() {
   const ref = useRef<HTMLDivElement>(null);
-  const current = useRef({ x: 50, y: 50, tiltX: 0, tiltY: 0 });
+  const current = useRef({ x: 0, y: 0 });
   const raf = useRef<number>(0);
 
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -83,42 +77,28 @@ export function useSpecular() {
     const el = ref.current;
     if (!el) return;
 
-    let targetX: number, targetY: number, tiltX: number, tiltY: number;
+    const targetX = gyroActive ? gyroNormX : mouseNormX;
+    const targetY = gyroActive ? gyroNormY : mouseNormY;
 
-    if (gyroGranted) {
-      targetX = gyroX;
-      targetY = gyroY;
-      tiltX = gyroTiltX;
-      tiltY = gyroTiltY;
-    } else {
-      // Desktop: use global mouse position
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      // Light position relative to card center
-      targetX = 50 + ((mouseVX - (cx / window.innerWidth) * 100)) * 0.8;
-      targetY = 50 + ((mouseVY - (cy / window.innerHeight) * 100)) * 0.8;
-      tiltX = (mouseVX - 50) / 50; // -1 to 1
-      tiltY = (mouseVY - 50) / 50;
-    }
+    // Very slow lerp — the light drifts, doesn't snap
+    current.current.x = lerp(current.current.x, targetX, 0.06);
+    current.current.y = lerp(current.current.y, targetY, 0.06);
 
-    // Lerp for smooth trailing
-    const c = current.current;
-    c.x = lerp(c.x, targetX, 0.08);
-    c.y = lerp(c.y, targetY, 0.08);
-    c.tiltX = lerp(c.tiltX, tiltX, 0.08);
-    c.tiltY = lerp(c.tiltY, tiltY, 0.08);
+    const cx = current.current.x;
+    const cy = current.current.y;
 
-    // Apply all CSS vars
-    el.style.setProperty("--spec-x", `${c.x}%`);
-    el.style.setProperty("--spec-y", `${c.y}%`);
-    el.style.setProperty("--tilt-x", `${c.tiltX}`);
-    el.style.setProperty("--tilt-y", `${c.tiltY}`);
+    // Specular position: 30-70% range (gentle shift, not extreme)
+    el.style.setProperty("--spec-x", `${50 + cx * 20}%`);
+    el.style.setProperty("--spec-y", `${35 + cy * 15}%`);
 
-    // Physical glass tilt — subtle 3D rotation
-    const rotY = c.tiltX * 2; // max ±2deg
-    const rotX = -c.tiltY * 1.5; // max ±1.5deg
-    el.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    // Tilt for directional border: raw -1 to 1
+    el.style.setProperty("--tilt-x", `${cx}`);
+    el.style.setProperty("--tilt-y", `${cy}`);
+
+    // Physical tilt — BARELY PERCEPTIBLE. ±0.5° max.
+    const rotY = cx * 0.5;
+    const rotX = -cy * 0.4;
+    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
     raf.current = requestAnimationFrame(animate);
   }, []);
