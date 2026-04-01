@@ -27,8 +27,10 @@ body {
 
 /* ══════════════════════════════════════════════
    LIQUID GLASS — iOS 26
-   Frosted glass with soft top-edge specular.
-   Tilt is barely perceptible — just the light drifts.
+
+   Real frosted glass: background shows through as
+   blurred colors, the surface has luminosity, edges
+   catch light. You should FEEL the glass thickness.
    ══════════════════════════════════════════════ */
 
 .liquid-glass {
@@ -36,83 +38,97 @@ body {
   isolation: isolate;
   overflow: hidden;
   will-change: transform;
-  /* Frosted glass — heavy blur, tinted surface */
-  background: rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-radius: 20px;
-  /* Thin border with subtle inner glow */
-  border: 0.5px solid rgba(255, 255, 255, 0.25);
+
+  /* The frosted surface — white tint over heavy blur */
+  background: rgba(200, 200, 210, 0.15);
+  backdrop-filter: blur(48px) saturate(1.4) brightness(1.1);
+  -webkit-backdrop-filter: blur(48px) saturate(1.4) brightness(1.1);
+  border-radius: 22px;
+
+  /* Visible border — not hair-thin, you should see it */
+  border: 1px solid rgba(255, 255, 255, 0.30);
+
+  /* Depth: outer shadow + top inner light + bottom inner shadow */
   box-shadow:
-    0 2px 16px rgba(0, 0, 0, 0.08),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.20);
-  transition: background 0.3s, box-shadow 0.3s;
+    0 4px 30px rgba(0, 0, 0, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
 }
+
 .liquid-glass:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(210, 210, 220, 0.20);
+  border-color: rgba(255, 255, 255, 0.40);
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.12),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.25);
+    0 6px 36px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
+
 .liquid-glass:active {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(180, 180, 190, 0.12);
+  transform: scale(0.98) !important;
   transition-duration: 0.08s;
 }
 
-/*
- * Specular: soft top-edge light + gentle moving highlight.
- * The top edge is always bright (like light hitting glass from above).
- * A soft, wide highlight drifts gently with tilt/mouse — NOT a dot.
- */
+/* Specular highlight */
 .liquid-glass-specular {
   position: absolute; inset: 0;
   border-radius: inherit;
   pointer-events: none; z-index: 0;
   background:
-    /* Fixed top-edge specular — always present, like real glass */
+    /* Top edge light — always present */
     linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.04) 15%,
-      transparent 40%
+      180deg,
+      rgba(255, 255, 255, 0.20) 0%,
+      rgba(255, 255, 255, 0.06) 12%,
+      transparent 35%
     ),
-    /* Gentle moving highlight — drifts with tilt, very soft */
+    /* Drifting soft highlight */
     radial-gradient(
-      ellipse 80% 70% at var(--spec-x, 50%) var(--spec-y, 35%),
-      rgba(255, 255, 255, 0.08) 0%,
-      transparent 60%
+      ellipse 80% 60% at var(--spec-x, 50%) var(--spec-y, 35%),
+      rgba(255, 255, 255, 0.10) 0%,
+      transparent 55%
     );
 }
 
-/* ── Hero panel ── */
+/* ── Hero panel — same material, larger radius ── */
 .liquid-glass-panel {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   will-change: transform;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(50px) saturate(200%);
-  -webkit-backdrop-filter: blur(50px) saturate(200%);
-  border: 0.5px solid rgba(255, 255, 255, 0.22);
-  border-radius: 26px;
+
+  background: rgba(200, 200, 210, 0.12);
+  backdrop-filter: blur(56px) saturate(1.5) brightness(1.15);
+  -webkit-backdrop-filter: blur(56px) saturate(1.5) brightness(1.15);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 28px;
+
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.10),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
-  transition: background 0.3s;
+    0 6px 40px rgba(0, 0, 0, 0.14),
+    0 1px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+
+  transition: background 0.25s;
 }
 
 .liquid-glass-panel .liquid-glass-specular {
   background:
     linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.03) 20%,
-      transparent 45%
+      180deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.04) 15%,
+      transparent 40%
     ),
     radial-gradient(
-      ellipse 70% 60% at var(--spec-x, 50%) var(--spec-y, 35%),
-      rgba(255, 255, 255, 0.06) 0%,
-      transparent 55%
+      ellipse 70% 50% at var(--spec-x, 50%) var(--spec-y, 35%),
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 50%
     );
 }
 

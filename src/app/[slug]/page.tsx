@@ -31,18 +31,18 @@ export default async function MemberPage({ params }: { params: Params }) {
     <main className="relative min-h-dvh max-w-[480px] mx-auto overflow-hidden">
       {/* Background — the cover photo IS the background.
           Glass refracts THIS. No gradient mesh, no orbs. Just the photo. */}
+      {/* Background — bright enough for glass to frost over visibly */}
       <div className="fixed inset-0 -z-10">
         {member.coverPhoto ? (
           <img
             src={member.coverPhoto}
             alt=""
-            className="w-full h-full object-cover brightness-[0.35] scale-110"
+            className="w-full h-full object-cover brightness-[0.6] saturate-[0.9] scale-105"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]" />
+          <div className="w-full h-full bg-gradient-to-br from-[#2a2a4e] via-[#1e3050] to-[#1a4070]" />
         )}
-        {/* Subtle dark overlay for text legibility */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
       {/* Content */}
