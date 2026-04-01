@@ -82,15 +82,14 @@ export default async function MemberPage({ params }: { params: Params }) {
 
       {/* Footer */}
       <AnimateIn delay={0.7 + member.sections.length * 0.1}>
-        <footer className="mt-20 flex flex-col items-center gap-4 px-6">
-          <div className="glow-line w-12" />
+        <footer className="mt-16 flex justify-center px-6 pb-4">
           <a
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[8px] text-white/15 hover:text-[#D4B87A]/50 transition-colors duration-500 tracking-[0.4em] uppercase font-bold"
+            className="text-[11px] text-[#48484A] hover:text-[#86868B] transition-colors duration-300"
           >
-            Circle13
+            circle13.space
           </a>
         </footer>
       </AnimateIn>
