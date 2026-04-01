@@ -7,10 +7,12 @@ export function Section({
 }) {
   return (
     <section className="px-5">
-      <p className="text-[12px] text-[#86868B] font-medium mb-5 px-1">
+      <p className="text-[13px] font-semibold text-[#86868B] mb-3 px-1 uppercase tracking-[0.02em]">
         {title}
       </p>
-      <div className="flex flex-col gap-2.5">{children}</div>
+      <div className="rounded-[14px] overflow-hidden bg-[#1C1C1E] divide-y divide-white/[0.06]">
+        {children}
+      </div>
     </section>
   );
 }

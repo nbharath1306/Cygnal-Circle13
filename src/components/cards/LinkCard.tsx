@@ -7,13 +7,13 @@ export function LinkCard({ link }: { link: Link }) {
       href={link.url}
       target={link.url.startsWith("mailto:") ? undefined : "_blank"}
       rel="noopener noreferrer"
-      className="group card-premium flex items-center gap-4 px-5 py-[18px]"
+      className="group flex items-center gap-3.5 px-4 py-3.5 bg-[#1C1C1E] hover:bg-[#2C2C2E] transition-colors duration-200 active:bg-[#3A3A3C]"
     >
-      {/* Icon */}
-      <div className="shrink-0 w-10 h-10 rounded-[10px] flex items-center justify-center bg-white/[0.05] group-hover:bg-[#2997FF]/10 transition-all duration-300">
+      {/* Icon — Apple rounded rect */}
+      <div className="shrink-0 w-[38px] h-[38px] rounded-[10px] flex items-center justify-center bg-[#2C2C2E] group-hover:bg-[#3A3A3C] transition-colors duration-200">
         {renderIcon(link.icon, {
-          size: 18,
-          className: "text-[#86868B] group-hover:text-[#2997FF] transition-colors duration-300",
+          size: 17,
+          className: "text-[#2997FF]",
         })}
       </div>
 
@@ -23,17 +23,17 @@ export function LinkCard({ link }: { link: Link }) {
           {link.label}
         </span>
         {link.description && (
-          <span className="text-[12px] text-[#86868B] block mt-1 leading-tight">
+          <span className="text-[13px] text-[#86868B] block mt-0.5 leading-tight">
             {link.description}
           </span>
         )}
       </div>
 
-      {/* Arrow */}
-      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5">
+      {/* Chevron — Apple uses this everywhere */}
+      <div className="shrink-0">
         {renderIcon("ChevronRight", {
-          size: 16,
-          className: "text-[#48484A] group-hover:text-[#86868B] transition-colors duration-300",
+          size: 18,
+          className: "text-[#48484A] group-hover:text-[#86868B] transition-colors duration-200",
         })}
       </div>
     </a>

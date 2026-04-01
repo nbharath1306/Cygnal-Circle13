@@ -1,31 +1,17 @@
-import { Instrument_Serif } from "next/font/google";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 
-export const instrumentSerif = Instrument_Serif({
+/**
+ * Apple uses SF Pro. On the web, apple.com falls back to Inter /
+ * system-ui. Inter with the right weights and optical sizing
+ * is the closest match available on Google Fonts.
+ */
+export const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-display",
+  variable: "--font-apple",
 });
 
-export const satoshi = localFont({
-  src: [
-    {
-      path: "../../public/fonts/Satoshi-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/Satoshi-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../public/fonts/Satoshi-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  display: "swap",
-  variable: "--font-body",
-});
+// Keep these aliases so layout.tsx doesn't break
+export const instrumentSerif = inter;
+export const satoshi = inter;

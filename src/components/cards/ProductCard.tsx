@@ -12,19 +12,19 @@ export function ProductCard({ product }: { product: Product }) {
       href={product.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group card-premium block px-5 py-5"
+      className="group block px-4 py-4 bg-[#1C1C1E] hover:bg-[#2C2C2E] transition-colors duration-200 active:bg-[#3A3A3C]"
     >
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-center justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="text-[15px] font-medium text-[#F5F5F7] leading-tight tracking-[-0.01em] group-hover:text-white transition-colors duration-300">
+          <span className="text-[15px] font-medium text-[#F5F5F7] leading-tight tracking-[-0.01em]">
             {product.name}
-          </h3>
-          <p className="text-[12px] text-[#86868B] mt-1.5 leading-relaxed">
+          </span>
+          <p className="text-[13px] text-[#86868B] mt-0.5 leading-tight">
             {product.tagline}
           </p>
         </div>
         {product.status && (
-          <span className={`shrink-0 text-[11px] font-medium ${statusColor[product.status] ?? "text-[#86868B]"}`}>
+          <span className={`shrink-0 text-[13px] font-medium ${statusColor[product.status] ?? "text-[#86868B]"}`}>
             {product.status}
           </span>
         )}

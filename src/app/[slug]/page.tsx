@@ -5,7 +5,7 @@ import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
 import { AnimateIn } from "@/components/layout/AnimateIn";
-import { StaggerChildren, StaggerItem } from "@/components/layout/StaggerChildren";
+
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import type { Metadata } from "next";
 
@@ -44,50 +44,38 @@ export default async function MemberPage({ params }: { params: Params }) {
 
   return (
     <ThemeProvider themeId={member.theme}>
-    <main className="min-h-dvh max-w-[480px] mx-auto pb-24" style={{ backgroundColor: "var(--color-bg-primary)", color: "var(--color-text-primary)" }}>
-      {/* Hero — full viewport immersive */}
+    <main className="min-h-dvh max-w-[500px] mx-auto pb-20 bg-black text-[#F5F5F7]">
       <ProfileHero member={member} />
 
-      {/* Link sections */}
-      <div className="flex flex-col gap-12 mt-6">
+      <div className="flex flex-col gap-8 mt-4">
         {member.sections.map((section, i) => (
-          <AnimateIn key={section.id} delay={0.4 + i * 0.1}>
+          <AnimateIn key={section.id} delay={0.3 + i * 0.08}>
             <Section title={section.title}>
-              <StaggerChildren>
-                {section.links.map((link) => (
-                  <StaggerItem key={link.label}>
-                    <LinkCard link={link} />
-                  </StaggerItem>
-                ))}
-              </StaggerChildren>
+              {section.links.map((link) => (
+                <LinkCard key={link.label} link={link} />
+              ))}
             </Section>
           </AnimateIn>
         ))}
 
-        {/* Products */}
         {member.products && member.products.length > 0 && (
-          <AnimateIn delay={0.4 + member.sections.length * 0.1}>
+          <AnimateIn delay={0.3 + member.sections.length * 0.08}>
             <Section title="Products">
-              <StaggerChildren>
-                {member.products.map((product) => (
-                  <StaggerItem key={product.name}>
-                    <ProductCard product={product} />
-                  </StaggerItem>
-                ))}
-              </StaggerChildren>
+              {member.products.map((product) => (
+                <ProductCard key={product.name} product={product} />
+              ))}
             </Section>
           </AnimateIn>
         )}
       </div>
 
-      {/* Footer */}
-      <AnimateIn delay={0.7 + member.sections.length * 0.1}>
-        <footer className="mt-16 flex justify-center px-6 pb-4">
+      <AnimateIn delay={0.5 + member.sections.length * 0.08}>
+        <footer className="mt-12 flex justify-center pb-6">
           <a
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] text-[#48484A] hover:text-[#86868B] transition-colors duration-300"
+            className="text-[13px] text-[#48484A] hover:text-[#86868B] transition-colors duration-200"
           >
             circle13.space
           </a>
