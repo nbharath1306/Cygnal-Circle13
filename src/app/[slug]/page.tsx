@@ -5,6 +5,7 @@ import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
 import { GyroPermission } from "@/components/ui/GyroPermission";
+import { LiquidGlassFilter } from "@/components/ui/LiquidGlassFilter";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -28,9 +29,12 @@ export default async function MemberPage({ params }: { params: Params }) {
   if (!member) notFound();
 
   return (
+    <>
+    {/* SVG filters for liquid glass refraction */}
+    <LiquidGlassFilter />
+
     <main className="relative min-h-dvh max-w-[480px] mx-auto overflow-hidden">
-      {/* Background — the cover photo IS the background.
-          Glass refracts THIS. No gradient mesh, no orbs. Just the photo. */}
+      {/* Background — glass refracts this */}
       {/* Background — bright enough for glass to frost over visibly */}
       <div className="fixed inset-0 -z-10">
         {member.coverPhoto ? (
@@ -94,5 +98,6 @@ export default async function MemberPage({ params }: { params: Params }) {
       {/* iOS gyroscope permission prompt */}
       <GyroPermission />
     </main>
+    </>
   );
 }
