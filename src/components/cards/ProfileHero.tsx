@@ -14,7 +14,7 @@ const materialize = {
 };
 
 export function ProfileHero({ member }: { member: TeamMember }) {
-  const { ref, onPointerMove, onPointerLeave } = useSpecular();
+  const { ref } = useSpecular();
 
   return (
     <div className="flex flex-col items-center">
@@ -28,8 +28,6 @@ export function ProfileHero({ member }: { member: TeamMember }) {
       >
         <div
           ref={ref}
-          onPointerMove={onPointerMove}
-          onPointerLeave={onPointerLeave}
           className="liquid-glass-panel w-full px-7 pt-9 pb-7 flex flex-col items-center text-center relative overflow-hidden"
         >
           {/* Specular highlight on hero card */}

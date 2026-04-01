@@ -17,15 +17,10 @@ export function GlassCard({
   target,
   rel,
 }: GlassCardProps) {
-  const { ref, onPointerMove, onPointerLeave } = useSpecular();
+  const { ref } = useSpecular();
 
   const inner = (
-    <div
-      ref={ref}
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
-      className={`liquid-glass ${className}`}
-    >
+    <div ref={ref} className={`liquid-glass ${className}`}>
       <div className="liquid-glass-specular" />
       <div className="relative z-[1] flex items-center w-full">
         {children}

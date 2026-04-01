@@ -25,81 +25,104 @@ body {
 ::selection { background: rgba(255,255,255,0.2); }
 ::-webkit-scrollbar { width: 0; }
 
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    LIQUID GLASS — iOS 26
-   Light blur. Real specular. Cursor-tracked.
-   ══════════════════════════════════════ */
+   Driven by --spec-x, --spec-y (light position)
+   and --tilt-x, --tilt-y (directional values -1 to 1).
+   useSpecular.ts sets these via RAF on every frame.
+   ══════════════════════════════════════════════ */
 
 .liquid-glass {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.10);
+  will-change: transform;
+  /* Glass surface */
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Directional border — brighter on the side facing the light */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, calc(0.12 + 0.18 * max(0, var(--tilt-y, 0))));
+  border-bottom-color: rgba(255, 255, 255, calc(0.12 + 0.18 * max(0, calc(-1 * var(--tilt-y, 0)))));
+  border-left-color: rgba(255, 255, 255, calc(0.12 + 0.18 * max(0, calc(-1 * var(--tilt-x, 0)))));
+  border-right-color: rgba(255, 255, 255, calc(0.12 + 0.18 * max(0, var(--tilt-x, 0))));
+  /* Depth shadow */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  /* Transition for hover states only — transform is driven by JS */
+  transition: background 0.3s, box-shadow 0.3s;
 }
 .liquid-glass:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.30);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 .liquid-glass:active {
-  transform: scale(0.98);
-  background: rgba(255, 255, 255, 0.08);
-  transition-duration: 0.1s;
+  background: rgba(255, 255, 255, 0.06);
 }
 
-/* Specular highlight — follows cursor with RAF interpolation */
+/*
+ * Specular highlight — LARGE, VISIBLE, sweeps the full surface.
+ * This is what makes it feel like real glass, not just blur.
+ * Three layers:
+ * 1. Primary specular — bright, follows light source
+ * 2. Edge rim — bright line at the "light-facing" edge
+ * 3. Surface sheen — broad gentle wash across the surface
+ */
 .liquid-glass-specular {
   position: absolute; inset: 0;
   border-radius: inherit;
   pointer-events: none; z-index: 0;
-  background: radial-gradient(
-    ellipse 160px 160px at var(--mouse-x, 50%) var(--mouse-y, 30%),
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.06) 40%,
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  background:
+    /* Primary specular spot — big, bright */
+    radial-gradient(
+      ellipse 70% 60% at var(--spec-x, 50%) var(--spec-y, 50%),
+      rgba(255, 255, 255, 0.30) 0%,
+      rgba(255, 255, 255, 0.08) 35%,
+      transparent 65%
+    ),
+    /* Broad directional sheen — entire surface responds */
+    linear-gradient(
+      calc(180deg + var(--tilt-x, 0) * 45deg),
+      rgba(255, 255, 255, 0.06) 0%,
+      transparent 60%
+    );
+  opacity: 1;
 }
-.liquid-glass:hover .liquid-glass-specular { opacity: 1; }
 
-/* On touch devices, specular is always visible (driven by gyro) */
-@media (pointer: coarse) {
-  .liquid-glass .liquid-glass-specular { opacity: 0.7; }
-  .liquid-glass:active .liquid-glass-specular { opacity: 1; }
-}
-
-/* Hero panel always shows specular (not just on hover) */
-.liquid-glass-panel .liquid-glass-specular {
-  background: radial-gradient(
-    ellipse 200px 200px at var(--mouse-x, 50%) var(--mouse-y, 30%),
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.04) 45%,
-    transparent 70%
-  );
-  opacity: 0.6;
-  transition: opacity 0.5s ease;
-}
-.liquid-glass-panel:hover .liquid-glass-specular { opacity: 1; }
-
-/* ── Hero panel — larger glass ── */
+/* ── Hero panel ── */
 .liquid-glass-panel {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
+  will-change: transform;
+  background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px) saturate(200%);
   -webkit-backdrop-filter: blur(16px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, calc(0.12 + 0.20 * max(0, var(--tilt-y, 0))));
+  border-bottom-color: rgba(255, 255, 255, calc(0.12 + 0.20 * max(0, calc(-1 * var(--tilt-y, 0)))));
+  border-left-color: rgba(255, 255, 255, calc(0.12 + 0.20 * max(0, calc(-1 * var(--tilt-x, 0)))));
+  border-right-color: rgba(255, 255, 255, calc(0.12 + 0.20 * max(0, var(--tilt-x, 0))));
   border-radius: 24px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.liquid-glass-panel .liquid-glass-specular {
+  background:
+    radial-gradient(
+      ellipse 60% 50% at var(--spec-x, 50%) var(--spec-y, 50%),
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.06) 40%,
+      transparent 65%
+    ),
+    linear-gradient(
+      calc(180deg + var(--tilt-x, 0) * 45deg),
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 55%
+    );
+  opacity: 1;
 }
 
 /* ── Materialization ── */
