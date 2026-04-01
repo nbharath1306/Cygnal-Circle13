@@ -6,8 +6,8 @@ const bharath: TeamMember = {
   title: "CEO & Founder",
   company: "Circle13",
   bio: "Exploring AI, ML, and entrepreneurship. Find my projects, thoughts, and creations here.",
-  photo: "/images/team/bharath.webp",
-  coverPhoto: "/images/team/bharath-cover.webp",
+  photo: "/images/team/bharath.jpeg",
+  coverPhoto: "/images/team/bharath-cover.jpeg",
   status: "Building in public",
   socials: [
     { platform: "LinkedIn", url: "https://www.linkedin.com/in/n-bharath-2b86311b9/", icon: "Linkedin" },
