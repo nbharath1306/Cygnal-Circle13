@@ -54,20 +54,34 @@ body {
   transition-duration: 0.1s;
 }
 
-/* Specular highlight — follows cursor */
+/* Specular highlight — follows cursor with RAF interpolation */
 .liquid-glass-specular {
   position: absolute; inset: 0;
   border-radius: inherit;
   pointer-events: none; z-index: 0;
   background: radial-gradient(
-    ellipse 140px 140px at var(--mouse-x, 50%) var(--mouse-y, 30%),
-    rgba(255, 255, 255, 0.25) 0%,
+    ellipse 160px 160px at var(--mouse-x, 50%) var(--mouse-y, 30%),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
     transparent 70%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 .liquid-glass:hover .liquid-glass-specular { opacity: 1; }
+
+/* Hero panel always shows specular (not just on hover) */
+.liquid-glass-panel .liquid-glass-specular {
+  background: radial-gradient(
+    ellipse 200px 200px at var(--mouse-x, 50%) var(--mouse-y, 30%),
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.04) 45%,
+    transparent 70%
+  );
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+.liquid-glass-panel:hover .liquid-glass-specular { opacity: 1; }
 
 /* ── Hero panel — larger glass ── */
 .liquid-glass-panel {

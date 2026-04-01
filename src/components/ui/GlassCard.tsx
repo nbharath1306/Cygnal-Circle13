@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useSpecular } from "@/lib/useSpecular";
 
 interface GlassCardProps {
   children: React.ReactNode;
@@ -17,35 +17,16 @@ export function GlassCard({
   target,
   rel,
 }: GlassCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    el.style.setProperty("--mouse-x", `${x}%`);
-    el.style.setProperty("--mouse-y", `${y}%`);
-  }, []);
-
-  const handlePointerLeave = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.setProperty("--mouse-x", "50%");
-    el.style.setProperty("--mouse-y", "30%");
-  }, []);
+  const { ref, onPointerMove, onPointerLeave } = useSpecular();
 
   const inner = (
     <div
       ref={ref}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
       className={`liquid-glass ${className}`}
     >
-      {/* Specular highlight */}
       <div className="liquid-glass-specular" />
-      {/* Content */}
       <div className="relative z-[1] flex items-center w-full">
         {children}
       </div>
