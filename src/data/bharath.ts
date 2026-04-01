@@ -10,11 +10,11 @@ const bharath: TeamMember = {
   coverPhoto: "/images/team/bharath-cover.webp",
   status: "Building in public",
   socials: [
-    { platform: "LinkedIn", url: "https://linkedin.com/in/nbharath1306", icon: "Linkedin" },
-    { platform: "WhatsApp", url: "https://wa.me/91XXXXXXXXXX", icon: "MessageCircle" },
-    { platform: "Instagram", url: "https://instagram.com/circle13.signal", icon: "Instagram" },
-    { platform: "X", url: "https://x.com/nbharath1306", icon: "Twitter" },
-    { platform: "Threads", url: "https://threads.net/@circle13.signal", icon: "AtSign" },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/in/n-bharath-2b86311b9/", icon: "Linkedin" },
+    { platform: "WhatsApp", url: "https://wa.me/918618698941", icon: "MessageCircle" },
+    { platform: "Instagram", url: "https://www.instagram.com/bharath_theunassailable/", icon: "Instagram" },
+    { platform: "X", url: "https://x.com/nbharath_1306", icon: "Twitter" },
+    { platform: "Email", url: "mailto:n.bharath3430@gmail.com", icon: "Mail" },
   ],
   sections: [
     {
@@ -48,15 +48,15 @@ const bharath: TeamMember = {
       links: [
         {
           label: "Instagram",
-          url: "https://instagram.com/circle13.signal",
+          url: "https://www.instagram.com/circle13.signal/",
           icon: "Instagram",
           description: "@circle13.signal",
         },
         {
           label: "Email",
-          url: "mailto:bharath@circle13.space",
+          url: "mailto:n.bharath3430@gmail.com",
           icon: "Mail",
-          description: "Get in touch",
+          description: "n.bharath3430@gmail.com",
         },
         {
           label: "Personal Website",

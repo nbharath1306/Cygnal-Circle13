@@ -81,16 +81,21 @@ export default async function MemberPage({ params }: { params: Params }) {
 
       {/* Footer */}
       <AnimateIn delay={0.8 + member.sections.length * 0.12}>
-        <footer className="mt-16 flex flex-col items-center gap-3 px-6">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
-          <a
-            href="https://circle13.space"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] text-text-tertiary hover:text-text-accent transition-colors tracking-widest uppercase"
-          >
-            Circle13
-          </a>
+        <footer className="mt-20 flex flex-col items-center gap-4 px-6">
+          <div className="h-[0.5px] w-12 bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] text-text-tertiary/60 tracking-[0.2em] uppercase">
+              Powered by
+            </span>
+            <a
+              href="https://circle13.space"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] text-text-accent/80 hover:text-text-accent transition-colors font-semibold tracking-wider uppercase"
+            >
+              Circle13
+            </a>
+          </div>
         </footer>
       </AnimateIn>
     </main>

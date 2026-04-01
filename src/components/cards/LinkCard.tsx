@@ -7,17 +7,25 @@ function getIcon(name: string, isPrimary?: boolean) {
   const Icon = LucideIcons[name as IconName] as React.ComponentType<{
     size?: number;
     className?: string;
+    strokeWidth?: number;
   }>;
   if (!Icon || typeof Icon !== "function") return null;
   return (
     <Icon
       size={20}
-      className={isPrimary ? "text-accent-gold" : "text-text-secondary group-hover:text-text-primary transition-colors"}
+      strokeWidth={1.8}
+      className={
+        isPrimary
+          ? "text-accent-gold"
+          : "text-text-secondary group-hover:text-text-primary transition-colors duration-200"
+      }
     />
   );
 }
 
 export function LinkCard({ link }: { link: Link }) {
+  const isPrimary = link.isPrimary;
+
   return (
     <a
       href={link.url}
@@ -25,30 +33,45 @@ export function LinkCard({ link }: { link: Link }) {
       rel="noopener noreferrer"
       className={`
         group relative flex items-center gap-4 w-full rounded-2xl
-        transition-all duration-200 ease-out
-        px-5 py-4 min-h-[56px]
+        overflow-hidden
+        transition-all duration-250 ease-out
+        px-5 py-[18px]
         ${
-          link.isPrimary
-            ? "bg-gradient-to-r from-accent-gold/10 via-accent-gold/5 to-transparent border border-accent-gold/20 hover:border-accent-gold/40 hover:shadow-[0_0_24px_-6px_rgba(201,169,110,0.15)]"
-            : "bg-bg-elevated/80 border border-border-default hover:border-border-hover hover:bg-bg-subtle hover:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.4)]"
+          isPrimary
+            ? "bg-gradient-to-r from-accent-gold/[0.08] to-accent-gold/[0.02] border border-accent-gold/20 hover:border-accent-gold/40 hover:shadow-[0_0_32px_-8px_rgba(212,175,85,0.2)]"
+            : "bg-bg-card border border-border-default hover:border-border-hover hover:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
         }
-        hover:-translate-y-[1px]
+        hover:-translate-y-[2px]
+        active:translate-y-0 active:scale-[0.995]
       `}
     >
-      {/* Icon container */}
+      {/* Shimmer overlay on primary */}
+      {isPrimary && (
+        <div className="absolute inset-0 shimmer pointer-events-none" />
+      )}
+
+      {/* Icon */}
       <div
         className={`
-          shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
-          ${link.isPrimary ? "bg-accent-gold/10" : "bg-bg-subtle/80 group-hover:bg-bg-primary/50"}
-          transition-colors duration-200
+          shrink-0 w-11 h-11 rounded-xl flex items-center justify-center
+          ${
+            isPrimary
+              ? "bg-accent-gold/[0.12] ring-1 ring-accent-gold/10"
+              : "bg-bg-subtle ring-1 ring-border-default group-hover:ring-border-hover"
+          }
+          transition-all duration-200
         `}
       >
-        {getIcon(link.icon, link.isPrimary)}
+        {getIcon(link.icon, isPrimary)}
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <span className="text-[15px] text-text-primary font-medium block leading-snug">
+        <span
+          className={`text-[15px] font-semibold block leading-snug ${
+            isPrimary ? "text-text-primary" : "text-text-primary"
+          }`}
+        >
           {link.label}
         </span>
         {link.description && (
@@ -61,7 +84,12 @@ export function LinkCard({ link }: { link: Link }) {
       {/* Arrow */}
       <LucideIcons.ArrowUpRight
         size={16}
-        className="text-text-tertiary opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0"
+        strokeWidth={2}
+        className={`
+          shrink-0 transition-all duration-200
+          ${isPrimary ? "text-accent-gold/60 group-hover:text-accent-gold" : "text-text-tertiary/0 group-hover:text-text-tertiary"}
+          group-hover:translate-x-0.5 group-hover:-translate-y-0.5
+        `}
       />
     </a>
   );
