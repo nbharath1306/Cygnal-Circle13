@@ -83,12 +83,12 @@ export default async function MemberPage({ params }: { params: Params }) {
       {/* Footer */}
       <AnimateIn delay={0.8 + member.sections.length * 0.12}>
         <footer className="mt-24 flex flex-col items-center gap-3 px-6">
-          <div className="h-px w-10 bg-gradient-to-r from-transparent via-violet-500/15 to-transparent" />
+          <div className="h-px w-8 bg-[#BFA97A]/10" />
           <a
             href="https://circle13.space"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[9px] text-white/20 hover:text-violet-300/50 transition-colors duration-400 tracking-[0.3em] uppercase"
+            className="text-[8px] text-white/15 hover:text-[#BFA97A]/40 transition-colors duration-500 tracking-[0.35em] uppercase font-semibold"
           >
             Circle13
           </a>

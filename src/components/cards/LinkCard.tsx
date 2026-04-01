@@ -11,40 +11,40 @@ export function LinkCard({ link }: { link: Link }) {
         group relative flex items-center gap-4 w-full
         rounded-2xl overflow-hidden
         glass gradient-border
-        transition-all duration-400 ease-out
+        transition-all duration-500 ease-out
         px-5 py-[18px]
         hover:-translate-y-[2px]
-        hover:shadow-[0_8px_40px_-12px_rgba(139,92,246,0.12)]
+        hover:shadow-[0_12px_48px_-16px_rgba(191,169,122,0.08)]
         active:translate-y-0 active:scale-[0.99]
       "
     >
-      <div className="absolute inset-0 shimmer-card pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-600" />
+      <div className="absolute inset-0 shimmer-card pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
       {/* Icon */}
-      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white/[0.04] group-hover:bg-gradient-to-br group-hover:from-violet-500/10 group-hover:to-pink-500/5 transition-all duration-400">
+      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white/[0.03] group-hover:bg-[#BFA97A]/[0.06] transition-all duration-500">
         {renderIcon(link.icon, {
           size: 17,
-          className: "text-white/30 group-hover:text-white/80 transition-colors duration-400",
+          className: "text-white/25 group-hover:text-[#BFA97A] transition-colors duration-500",
         })}
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <span className="text-[14px] font-medium block leading-snug text-white/80 group-hover:text-white transition-colors duration-400">
+        <span className="text-[13.5px] font-medium block leading-snug text-white/75 group-hover:text-white transition-colors duration-500 tracking-wide">
           {link.label}
         </span>
         {link.description && (
-          <span className="text-[11px] text-white/25 block mt-0.5 leading-snug group-hover:text-white/40 transition-colors duration-400">
+          <span className="text-[11px] text-white/18 block mt-1 leading-snug group-hover:text-white/30 transition-colors duration-500">
             {link.description}
           </span>
         )}
       </div>
 
       {/* Arrow */}
-      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-all duration-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
         {renderIcon("ArrowUpRight", {
-          size: 13,
-          className: "text-violet-300/50",
+          size: 12,
+          className: "text-[#BFA97A]/50",
         })}
       </div>
     </a>
