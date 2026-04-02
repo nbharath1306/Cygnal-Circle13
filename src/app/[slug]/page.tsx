@@ -6,7 +6,6 @@ import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
 import { LiquidGlassFilter } from "@/components/ui/LiquidGlassFilter";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
-import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -35,8 +34,19 @@ export default async function MemberPage({ params }: { params: Params }) {
       <LoadingScreen />
 
       <main className="relative min-h-dvh max-w-[480px] mx-auto overflow-hidden">
-        {/* Parallax background */}
-        <ParallaxBg src={member.coverPhoto} />
+        {/* Background — fixed, no parallax */}
+        <div className="fixed inset-0 -z-10">
+          {member.coverPhoto ? (
+            <img
+              src={member.coverPhoto}
+              alt=""
+              className="w-full h-full object-cover brightness-[0.7] saturate-[1.1] scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#2a2a4e] via-[#1e3050] to-[#1a4070]" />
+          )}
+          <div className="absolute inset-0 bg-black/10" />
+        </div>
 
         {/* Content */}
         <div className="relative z-10 px-5 pt-14 sm:pt-20 pb-16">
