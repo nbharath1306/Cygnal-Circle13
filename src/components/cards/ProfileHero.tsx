@@ -127,36 +127,42 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             {member.bio}
           </motion.p>
 
-          {/* Separator */}
-          <div className="w-full h-px bg-[#38383A] mt-6 mb-5" />
-
-          {/* Social icons with tap sound */}
+          {/* Social icons — single glass pill bar with separators */}
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 1.4, ease }}
-            className="flex items-center gap-2.5"
+            className="mt-6 w-full"
           >
-            {member.socials.map((social) => (
-              <a
-                key={social.platform}
-                href={social.url}
-                target={social.url.startsWith("mailto:") ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                aria-label={social.platform}
-                onClick={playTap}
-                className="
-                  w-[44px] h-[44px] flex items-center justify-center
-                  rounded-full text-white/60
-                  hover:text-white hover:bg-[rgba(120,120,128,0.36)]
-                  active:scale-90 active:bg-[rgba(120,120,128,0.24)]
-                  transition-all duration-200
-                "
-                style={{ background: "rgba(120, 120, 128, 0.18)" }}
-              >
-                {renderIcon(social.icon, { size: 18 })}
-              </a>
-            ))}
+            <div
+              className="flex items-center rounded-[16px] overflow-hidden"
+              style={{
+                background: "rgba(120, 120, 128, 0.12)",
+                border: "0.5px solid rgba(255, 255, 255, 0.12)",
+                boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.10), inset 0 0 10px -4px rgba(255,255,255,0.15)",
+              }}
+            >
+              {member.socials.map((social, i) => (
+                <a
+                  key={social.platform}
+                  href={social.url}
+                  target={social.url.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  aria-label={social.platform}
+                  onClick={playTap}
+                  className="
+                    flex-1 flex items-center justify-center
+                    h-[44px] text-white/50
+                    hover:text-white hover:bg-white/[0.06]
+                    active:bg-white/[0.03] active:scale-95
+                    transition-all duration-150
+                  "
+                  style={i < member.socials.length - 1 ? { borderRight: "0.5px solid rgba(255,255,255,0.08)" } : {}}
+                >
+                  {renderIcon(social.icon, { size: 17 })}
+                </a>
+              ))}
+            </div>
           </motion.div>
         </div>
       </motion.div>
