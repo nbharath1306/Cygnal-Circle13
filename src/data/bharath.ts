@@ -23,7 +23,7 @@ const bharath: TeamMember = {
       links: [
         {
           label: "Build Labs",
-          url: "https://circle13.space",
+          url: "https://buildlabs.circle13.space",
           icon: "Rocket",
           description: "Where ideas become products",
         },
