@@ -14,6 +14,8 @@ const bharath: TeamMember = {
     { platform: "WhatsApp", url: "https://wa.me/918618698941", icon: "WhatsApp" },
     { platform: "Instagram", url: "https://www.instagram.com/bharath_theunassailable/", icon: "Instagram" },
     { platform: "X", url: "https://x.com/nbharath_1306", icon: "Twitter" },
+    { platform: "Reddit", url: "https://www.reddit.com/user/Longjumping_Rip8436/", icon: "Reddit" },
+    { platform: "Substack", url: "https://substack.com/@nbharath1306", icon: "Substack" },
     { platform: "Email", url: "mailto:n.bharath3430@gmail.com", icon: "Mail" },
   ],
   sections: [
@@ -50,6 +52,18 @@ const bharath: TeamMember = {
           url: "https://www.instagram.com/circle13.signal/",
           icon: "Instagram",
           description: "@circle13.signal",
+        },
+        {
+          label: "Reddit",
+          url: "https://www.reddit.com/user/Longjumping_Rip8436/",
+          icon: "Reddit",
+          description: "u/Longjumping_Rip8436",
+        },
+        {
+          label: "Substack",
+          url: "https://substack.com/@nbharath1306",
+          icon: "Substack",
+          description: "@nbharath1306",
         },
         {
           label: "Email",
