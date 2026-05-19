@@ -201,13 +201,9 @@ END:VCARD`;
           C13
         </span>
 
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-          <rect x="3" y="4" width="18" height="16" rx="3" />
-          <circle cx="10" cy="11" r="2.5" />
-          <path d="M6 17c0-2 2-3 4-3s4 1 4 3" />
-          <line x1="17" y1="10" x2="17" y2="14" />
-          <line x1="15" y1="12" x2="19" y2="12" />
-        </svg>
+        <div className="font-sans font-[900] text-[22px] text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] select-none">
+          C13
+        </div>
       </motion.button>
 
       {/* Overlay & Modal */}
@@ -628,11 +624,9 @@ END:VCARD`;
                       onClick={downloadvCard}
                       className="w-full py-3.5 rounded-[16px] font-bold text-white/85 hover:text-white text-[13.5px] flex items-center justify-center gap-1.5 cursor-pointer bg-white/5 border border-white/15 hover:bg-white/10 transition-all active:scale-[0.98]"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                      </svg>
+                      <span className="font-sans font-black text-[12px] tracking-tighter bg-white/15 px-1.5 py-0.5 rounded shadow-sm text-white border border-white/20">
+                        C13
+                      </span>
                       C13
                     </button>
                   </motion.div>
