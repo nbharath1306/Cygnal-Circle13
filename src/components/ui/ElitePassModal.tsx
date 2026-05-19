@@ -159,7 +159,7 @@ END:VCARD`;
                     <div className="flex justify-between items-start z-10 relative">
                       <div className="flex flex-col">
                         <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/70 uppercase">Circle13 Presents</span>
-                        <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Golden Pass</span>
+                        <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
                       </div>
                       
                       {/* Premium Golden Foil Shark Seal */}
@@ -173,6 +173,8 @@ END:VCARD`;
 
                     {/* ── MIDDLE SECTION — YC-STYLE HUGE CONDENSED TYPOGRAPHY ── */}
                     <div className="flex flex-col z-10 relative">
+                      <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-white/50 uppercase mb-1">Executive Holder</span>
+                      
                       <div className="flex flex-col leading-none">
                         <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
                           {firstName}
@@ -204,8 +206,8 @@ END:VCARD`;
                     {/* ── BOTTOM STUB SECTION ── */}
                     <div className="flex justify-between items-end z-10 relative pt-2">
                       <div className="flex flex-col">
-                        <span className="text-[16px] font-black tracking-[0.25em] text-white/90 uppercase font-mono leading-none">Admit One</span>
-                        <span className="text-[9px] font-mono tracking-wider text-white/50 uppercase mt-1">C13 Elite Network Pass</span>
+                        <span className="text-[15px] font-black tracking-[0.18em] text-white/90 uppercase font-mono leading-none">VIP Access</span>
+                        <span className="text-[9px] font-mono tracking-wider text-white/50 uppercase mt-1">Direct Connection Key</span>
                       </div>
                       
                       <div className="flex flex-col items-end">
