@@ -289,7 +289,7 @@ END:VCARD`;
                     {/* ── CARD TOP HALF (Absolute Seam locked, Unified Gradient) ── */}
                     <motion.div
                       ref={cardRef}
-                      className="absolute top-0 left-0 right-0 rounded-t-[24px] rounded-b-[6px] border-t border-x border-amber-300/30 p-6 flex flex-col justify-between overflow-hidden"
+                      className="absolute top-0 left-0 right-0 rounded-t-[24px] rounded-b-[6px] border-t border-x border-yellow-400/45 shadow-[inset_0_1px_0_rgba(251,191,36,0.3)] p-6 flex flex-col justify-between overflow-hidden"
                       style={{
                         background: "linear-gradient(to bottom, #FF9B04 0%, #E65C00 100%)",
                         backgroundImage: "linear-gradient(to bottom, #FF9B04 0%, #E65C00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.18)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
@@ -302,6 +302,23 @@ END:VCARD`;
                       }}
                       transition={{ type: "spring", damping: 26, stiffness: 220 }}
                     >
+                      {/* Holographic dynamic iridescent glare layer */}
+                      <div
+                        className="absolute inset-0 pointer-events-none opacity-[0.09] mix-blend-color-dodge z-[2] holographic-reflection"
+                        style={{
+                          background: "linear-gradient(135deg, #FFD60A 0%, #64D2FF 35%, #FF2D55 70%, #30D158 100%)",
+                        }}
+                      />
+
+                      {/* Ripped-Cotton heavy paper fiber bottom edge seam */}
+                      {isTorn && (
+                        <div className="absolute bottom-0 left-0 right-0 h-[4px] overflow-hidden pointer-events-none z-20">
+                          <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 10" fill="none" className="text-[#0d0d12]">
+                            <path d="M0,0 L100,0 L100,2 Q95,5 90,2 Q85,8 80,3 Q75,6 70,2 Q65,7 60,3 Q55,5 50,2 Q45,8 40,3 Q35,6 30,2 Q25,7 20,3 Q15,5 10,2 Q5,8 0,3 Z" fill="currentColor" />
+                          </svg>
+                        </div>
+                      )}
+
                       {/* Reflective light mask */}
                       <div
                         className="absolute inset-0 pointer-events-none opacity-20"
@@ -552,7 +569,7 @@ END:VCARD`;
                               ease: "easeIn",
                             }
                           }}
-                          className="absolute bottom-0 left-0 right-0 rounded-b-[24px] rounded-t-[6px] border-b border-x border-amber-300/30 p-6 flex flex-col justify-end overflow-hidden"
+                          className="absolute bottom-0 left-0 right-0 rounded-b-[24px] rounded-t-[6px] border-b border-x border-yellow-500/40 shadow-[inset_0_-1px_0_rgba(251,191,36,0.2)] p-6 flex flex-col justify-end overflow-hidden"
                           style={{
                             background: "linear-gradient(to bottom, #E65C00 0%, #9E1B00 100%)",
                             backgroundImage: "linear-gradient(to bottom, #E65C00 0%, #9E1B00 100%), radial-gradient(circle at 50% 0%, transparent, rgba(0,0,0,0.18)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
@@ -560,6 +577,21 @@ END:VCARD`;
                             height: "152px",
                           }}
                         >
+                          {/* Holographic dynamic iridescent glare layer */}
+                          <div
+                            className="absolute inset-0 pointer-events-none opacity-[0.09] mix-blend-color-dodge z-[2] holographic-reflection"
+                            style={{
+                              background: "linear-gradient(135deg, #FFD60A 0%, #64D2FF 35%, #FF2D55 70%, #30D158 100%)",
+                            }}
+                          />
+
+                          {/* Ripped-Cotton heavy paper fiber top edge seam */}
+                          <div className="absolute top-0 left-0 right-0 h-[4px] overflow-hidden pointer-events-none z-20">
+                            <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 10" fill="none" className="text-[#0d0d12]">
+                              <path d="M0,10 L100,10 L100,8 Q95,5 90,8 Q85,2 80,7 Q75,4 70,8 Q65,3 60,7 Q55,5 50,8 Q45,2 40,7 Q35,4 30,8 Q25,3 20,7 Q15,5 10,8 Q5,2 0,7 Z" fill="currentColor" />
+                            </svg>
+                          </div>
+
                           {/* Punch notches matching exactly the seam */}
                           <div className="absolute -left-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
                           <div className="absolute -right-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />

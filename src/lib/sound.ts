@@ -344,4 +344,70 @@ export function playLuxuryUnlock() {
   }
 }
 
+/**
+ * Grand Entrance Swell
+ * Synthesizes a deep warm Db Major 7 velvet ambient pad swell 
+ * staggered with a cascading shimmering Db Major 9 wind-chime bloom.
+ */
+export function playEntranceSwell() {
+  try {
+    const audioCtx = getCtx();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+
+    // Layer 1: Warm ambient pad swell (Db Major 7)
+    const padFreqs = [138.59, 207.65, 261.63, 349.23];
+    padFreqs.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now);
+      
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.04, now + 1.2 + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8 + i * 0.2);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 600;
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 3.2);
+    });
+
+    // Layer 2: Shimmering gold chime cascade sweep (Db Major 9 Chime)
+    const chimeFreqs = [554.37, 698.46, 830.61, 1046.50, 1109.73, 1396.91, 1661.22];
+    chimeFreqs.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + 0.4 + i * 0.08);
+      
+      gain.gain.setValueAtTime(0, now + 0.4 + i * 0.08);
+      gain.gain.linearRampToValueAtTime(0.015, now + 0.4 + i * 0.08 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4 + i * 0.08 + 1.2);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(3000, now);
+      filter.frequency.exponentialRampToValueAtTime(800, now + 0.4 + i * 0.08 + 1.0);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now + 0.4 + i * 0.08);
+      osc.stop(now + 0.4 + i * 0.08 + 1.4);
+    });
+
+  } catch {
+    // silent fail
+  }
+}
+
+
 

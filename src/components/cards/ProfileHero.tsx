@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react";
 import VanillaTilt from "vanilla-tilt";
 import type { TeamMember } from "@/data/types";
 import { renderIcon } from "@/lib/icons";
-import { playTap, playHover } from "@/lib/sound";
+import { playTap, playHover, playEntranceSwell } from "@/lib/sound";
 import { ElitePassModal } from "@/components/ui/ElitePassModal";
 
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
@@ -32,6 +32,20 @@ export function ProfileHero({ member }: { member: TeamMember }) {
     const panel = panelRef.current;
     const ring = photoRingRef.current;
     const cleanups: (() => void)[] = [];
+
+    // Grand entrance acoustic pad swell + wind chime sweep
+    const playIntro = () => {
+      playEntranceSwell();
+      window.removeEventListener("pointerdown", playIntro);
+      window.removeEventListener("keydown", playIntro);
+    };
+    playIntro();
+    window.addEventListener("pointerdown", playIntro);
+    window.addEventListener("keydown", playIntro);
+    cleanups.push(() => {
+      window.removeEventListener("pointerdown", playIntro);
+      window.removeEventListener("keydown", playIntro);
+    });
 
     if (panel) {
       cleanups.push(initTilt(panel, {
