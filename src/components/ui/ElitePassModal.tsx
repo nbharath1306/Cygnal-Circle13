@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 import VanillaTilt from "vanilla-tilt";
-import { playTap } from "@/lib/sound";
+import { playTap, playScissorSnip, playLuxuryUnlock } from "@/lib/sound";
 import type { TeamMember } from "@/data/types";
 import Image from "next/image";
 
@@ -51,6 +51,8 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
       // Spawn real paper shavings relative to drag movement!
       const diff = Math.abs(latest - lastX.current);
       if (diff > 4.5 && latest > 5 && latest < trackWidth - 5) {
+        playScissorSnip(); // Play highly realistic Web Audio synthesized metal blade snip friction!
+        
         const count = 2 + Math.floor(Math.random() * 2);
         const newShavings = Array.from({ length: count }).map(() => ({
           id: Math.random() + latest,
@@ -116,7 +118,7 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
 
   // Perform tear-off animation transition
   const handleTear = () => {
-    playTap();
+    playLuxuryUnlock(); // High-conviction premium crystal pentatonic arpeggio chime!
     setIsTorn(true);
     setTimeout(() => {
       setShowForm(true);

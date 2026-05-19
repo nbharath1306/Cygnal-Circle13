@@ -206,3 +206,128 @@ export function playSuccess() {
   }
 }
 
+/**
+ * Realistic Scissor Snip
+ * Synthesizes paper shearing friction and steel blade closure contact.
+ */
+let lastSnipTime = 0;
+export function playScissorSnip() {
+  try {
+    const audioCtx = getCtx();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+
+    // Intelligent throttle: avoid audio context clipping during high-speed dragging
+    if (now - lastSnipTime < 0.12) return;
+    lastSnipTime = now;
+
+    const duration = 0.08;
+    const bufferSize = audioCtx.sampleRate * duration;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    // Metal shearing filter sweep
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.Q.value = 4.5;
+    filter.frequency.setValueAtTime(3200, now);
+    filter.frequency.exponentialRampToValueAtTime(1400, now + duration);
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.06, now + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    // Blade closure contact tick
+    const tickOsc = audioCtx.createOscillator();
+    const tickGain = audioCtx.createGain();
+    tickOsc.type = "sine";
+    tickOsc.frequency.setValueAtTime(1900, now + duration - 0.012);
+    
+    tickGain.gain.setValueAtTime(0, now);
+    tickGain.gain.setValueAtTime(0.02, now + duration - 0.012);
+    tickGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    tickOsc.connect(tickGain);
+    tickGain.connect(audioCtx.destination);
+
+    noise.start(now);
+    noise.stop(now + duration + 0.02);
+    
+    tickOsc.start(now);
+    tickOsc.stop(now + duration + 0.02);
+  } catch {
+    // silent fail
+  }
+}
+
+/**
+ * Db Major Crystal Unlock Swell
+ * Ascending chord bells with Pseudo-Reverb lowpass arpeggiator.
+ */
+export function playLuxuryUnlock() {
+  try {
+    const audioCtx = getCtx();
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+
+    // Db Major 9 pentatonic warm stack
+    const frequencies = [277.18, 415.30, 554.37, 698.46, 830.61, 1046.50];
+    const gains = [0.06, 0.05, 0.04, 0.035, 0.025, 0.015];
+    const decays = [0.65, 0.75, 0.85, 0.95, 1.1, 1.25];
+
+    frequencies.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + i * 0.045);
+      
+      gainNode.gain.setValueAtTime(0, now + i * 0.045);
+      gainNode.gain.linearRampToValueAtTime(gains[i], now + i * 0.045 + 0.025);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.045 + decays[i]);
+
+      // Sound damping sweep to give natural crystal bell acoustics
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(2000, now);
+      filter.frequency.exponentialRampToValueAtTime(650, now + decays[i]);
+
+      osc.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      osc.start(now + i * 0.045);
+      osc.stop(now + i * 0.045 + decays[i] + 0.1);
+    });
+
+    // Deep warm velvet sub base body
+    const body = audioCtx.createOscillator();
+    const bodyGain = audioCtx.createGain();
+    body.type = "sine";
+    body.frequency.setValueAtTime(110, now);
+    
+    bodyGain.gain.setValueAtTime(0, now);
+    bodyGain.gain.linearRampToValueAtTime(0.1, now + 0.12);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+
+    body.connect(bodyGain);
+    bodyGain.connect(audioCtx.destination);
+
+    body.start(now);
+    body.stop(now + 1.3);
+  } catch {
+    // silent fail
+  }
+}
+
+
