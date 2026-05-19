@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 import VanillaTilt from "vanilla-tilt";
 import { playTap } from "@/lib/sound";
 import type { TeamMember } from "@/data/types";
@@ -16,18 +16,42 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
   const [visitorContact, setVisitorContact] = useState("");
   const [visitorContext, setVisitorContext] = useState("⚡️ Met Just Now");
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  // Scissor track tracking
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackWidth, setTrackWidth] = useState(296); // default fallback
+  const dragX = useMotionValue(0);
+  const [dragProgressPercent, setDragProgressPercent] = useState(0);
 
-  // Initialize Tilt on Modal Card (only if not torn to allow stable form inputs)
+  // Monitor dragX to update visual cut progress percentage
+  useEffect(() => {
+    const unsubscribe = dragX.on("change", (latest) => {
+      if (trackWidth > 0) {
+        setDragProgressPercent((latest / trackWidth) * 100);
+      }
+    });
+    return () => unsubscribe();
+  }, [dragX, trackWidth]);
+
+  // Track container width dynamically on open
+  useEffect(() => {
+    if (isOpen && trackRef.current) {
+      // Container is roughly 332px inside modal padding, handle is 36px wide
+      setTrackWidth(trackRef.current.offsetWidth - 36);
+    }
+  }, [isOpen]);
+
+  // Initialize Tilt on Modal Card (only if not torn to allow stable dragging/inputs)
   useEffect(() => {
     const cardEl = cardRef.current;
     if (isOpen && cardEl && !isTorn) {
       VanillaTilt.init(cardEl, {
-        max: 15,
+        max: 12,
         speed: 600,
-        scale: 1.03,
+        scale: 1.02,
         perspective: 1000,
         glare: true,
-        "max-glare": 0.4,
+        "max-glare": 0.3,
         easing: "cubic-bezier(0.23, 1, 0.32, 1)",
       });
     }
@@ -37,11 +61,14 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
     };
   }, [isOpen, isTorn]);
 
+  // Reset modal state when closed
   const toggleModal = () => {
     playTap();
     if (isOpen) {
       setIsTorn(false);
       setShowForm(false);
+      dragX.set(0);
+      setDragProgressPercent(0);
       setVisitorName("");
       setVisitorContact("");
       setVisitorContext("⚡️ Met Just Now");
@@ -55,7 +82,7 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
     setIsTorn(true);
     setTimeout(() => {
       setShowForm(true);
-    }, 450); // Delay matches framer-motion exit duration
+    }, 500); // Delay matches framer-motion exit duration
   };
 
   // Compile lead inputs and redirect directly to WhatsApp or Email
@@ -114,7 +141,7 @@ END:VCARD`;
 
   return (
     <>
-      {/* Floating Action Button (FAB) - Upgraded to Amber Gold Theme */}
+      {/* Floating Action Button (FAB) - Amber Gold Theme */}
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -128,7 +155,6 @@ END:VCARD`;
         }}
         aria-label="Open Elite Pass"
       >
-        {/* Sleek executive hover label */}
         <span className="absolute right-16 scale-0 group-hover:scale-100 transition-all duration-200 origin-right bg-black/75 backdrop-blur-md text-white text-[11px] font-bold py-2 px-3 rounded-xl border border-white/10 shadow-lg pointer-events-none whitespace-nowrap tracking-wider uppercase">
           Save Contact
         </span>
@@ -157,7 +183,7 @@ END:VCARD`;
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative max-w-[380px] w-full flex flex-col items-center gap-5"
+              className="relative max-w-[380px] w-full flex flex-col items-center gap-4.5"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -171,192 +197,267 @@ END:VCARD`;
                 </svg>
               </button>
 
-              {/* Double-stack name parts for YC-styled typography */}
+              {/* Double-stack name split logic */}
               {(() => {
                 const nameParts = member.name.split(" ");
                 const firstName = nameParts[0] || "";
                 const lastName = nameParts.slice(1).join(" ") || "";
 
                 return (
-                  <div
-                    ref={cardRef}
-                    className="w-full h-[480px] rounded-[24px] relative overflow-hidden shadow-[0_25px_60px_rgba(230,92,0,0.35)] border border-amber-300/30 p-6 flex flex-col justify-between"
-                    style={{
-                      background: "linear-gradient(135deg, #FF9B04 0%, #E65C00 60%, #9E1B00 100%)",
-                      backgroundImage: "linear-gradient(135deg, #FF9B04 0%, #E65C00 60%, #9E1B00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
-                      backgroundBlendMode: "overlay, normal, normal",
-                    }}
-                  >
-                    {/* Holographic light reflect overlay */}
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-20"
+                  <div className="w-full flex flex-col items-center relative select-none">
+                    
+                    {/* ── CARD TOP HALF (Unified Gradient, dynamically expands post-cut) ── */}
+                    <motion.div
+                      ref={cardRef}
+                      className="w-full rounded-t-[24px] rounded-b-[8px] relative overflow-hidden shadow-[0_20px_50px_rgba(230,92,0,0.25)] border-t border-x border-amber-300/30 p-6 flex flex-col justify-between"
                       style={{
-                        background: "linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%)",
+                        background: "linear-gradient(135deg, #FF9B04 0%, #E65C00 100%)",
+                        backgroundImage: "linear-gradient(135deg, #FF9B04 0%, #E65C00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
+                        backgroundBlendMode: "overlay, normal, normal",
+                        height: showForm ? "390px" : "330px",
                       }}
-                    />
+                      animate={{
+                        height: showForm ? 390 : 330,
+                      }}
+                      transition={{ type: "spring", damping: 26, stiffness: 220 }}
+                    >
+                      {/* Holographic light reflect overlay */}
+                      <div
+                        className="absolute inset-0 pointer-events-none opacity-20"
+                        style={{
+                          background: "linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%)",
+                        }}
+                      />
 
-                    {/* Left/Right physical ticket punch holes */}
-                    <div className="absolute -left-3.5 top-[71.5%] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
-                    <div className="absolute -right-3.5 top-[71.5%] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />
+                      {/* Physical punch notches at bottom edge */}
+                      <div className="absolute -left-3.5 bottom-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
+                      <div className="absolute -right-3.5 bottom-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />
 
-                    {/* Dotted Perforation Line (only displays if not torn) */}
-                    <AnimatePresence>
-                      {!isTorn && (
-                        <motion.div
-                          initial={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute left-4 right-4 top-[74.5%] z-10 border-t-2 border-dashed border-white/30"
-                        />
-                      )}
-                    </AnimatePresence>
-
-                    {/* ── TOP SECTION ── */}
-                    <div className="flex justify-between items-start z-10 relative">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/70 uppercase">Circle13 Presents</span>
-                        <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
-                      </div>
-                      
-                      {/* Concentric Golden Foil Monogram Stamp (Engraved C13) */}
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0 select-none">
-                        <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
-                        <div className="font-sans font-[900] text-[20px] text-[#4d2d00] tracking-tighter drop-shadow-[0_1.5px_0px_rgba(255,255,255,0.4)] select-none">
-                          C13
+                      {/* Header */}
+                      <div className="flex justify-between items-start z-10 relative">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/70 uppercase">Circle13 Presents</span>
+                          <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
+                        </div>
+                        
+                        {/* Concentric Golden Stamp Engraved C13 */}
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0 select-none">
+                          <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
+                          <div className="font-sans font-[900] text-[20px] text-[#4d2d00] tracking-tighter drop-shadow-[0_1.5px_0px_rgba(255,255,255,0.4)] select-none">
+                            C13
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* ── MIDDLE SECTION — YC-STYLE DETAILS / INLINE GUEST LEAD FORM ── */}
-                    <div className="flex flex-col z-10 relative flex-1 justify-center">
-                      <AnimatePresence mode="wait">
-                        {showForm ? (
-                          /* VIP CONNECTION FORM (Fades in post-tear) */
-                          <motion.div
-                            key="connection-form"
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -15 }}
-                            transition={{ duration: 0.3 }}
-                            className="flex flex-col gap-3.5 w-full mt-2"
-                          >
-                            <div className="flex flex-col">
-                              <span className="text-[11px] font-mono font-bold tracking-[0.15em] text-yellow-200/90 uppercase">Submit Connection Stub</span>
-                              <span className="text-[10px] text-white/70 leading-tight mt-0.5">Claim the other half of the pass to connect with {member.name}</span>
-                            </div>
-
-                            {/* Visitor Name Input */}
-                            <div className="flex flex-col">
+                      {/* Top Half Credentials / Dynamic Guest connection Form */}
+                      <div className="flex flex-col z-10 relative flex-1 justify-center">
+                        <AnimatePresence mode="wait">
+                          {showForm ? (
+                            /* VIP CONNECTION FORM */
+                            <motion.div
+                              key="connection-form"
+                              initial={{ opacity: 0, y: 15 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -15 }}
+                              className="flex flex-col gap-3 w-full mt-2"
+                            >
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-mono font-bold tracking-[0.15em] text-yellow-200/90 uppercase">Submit Connection Stub</span>
+                                <span className="text-[10px] text-white/70 leading-tight mt-0.5">Met {member.name}? Enter your contact details:</span>
+                              </div>
+                              
                               <input
                                 type="text"
                                 placeholder="Your Name"
                                 value={visitorName}
                                 onChange={(e) => setVisitorName(e.target.value)}
-                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2.5 px-3.5 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2 px-3 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
                               />
-                            </div>
-
-                            {/* Visitor Contact Input */}
-                            <div className="flex flex-col">
+                              
                               <input
                                 type="text"
                                 placeholder="LinkedIn profile or Email"
                                 value={visitorContact}
                                 onChange={(e) => setVisitorContact(e.target.value)}
-                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2.5 px-3.5 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2 px-3 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
                               />
-                            </div>
 
-                            {/* Meeting Context Selector */}
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-[9px] font-mono font-bold tracking-[0.1em] text-white/40 uppercase">Meeting context:</span>
-                              <div className="flex flex-wrap gap-1.5">
-                                {["⚡️ Met Just Now", "💼 Coffee/Pitch", "🚀 Collaboration"].map((tag) => (
-                                  <button
-                                    key={tag}
-                                    type="button"
-                                    onClick={() => setVisitorContext(tag)}
-                                    className={`text-[9.5px] font-bold py-1 px-3 rounded-full border transition-all cursor-pointer ${
-                                      visitorContext === tag
-                                        ? "bg-white text-[#d01c00] border-white shadow-sm"
-                                        : "bg-black/25 text-white/60 border-white/10 hover:border-white/30"
-                                    }`}
-                                  >
-                                    {tag}
-                                  </button>
-                                ))}
+                              <div className="flex flex-col gap-1.5">
+                                <div className="flex flex-wrap gap-1.5">
+                                  {["⚡️ Met Just Now", "💼 Coffee/Pitch", "🚀 Collab"].map((tag) => (
+                                    <button
+                                      key={tag}
+                                      type="button"
+                                      onClick={() => setVisitorContext(tag)}
+                                      className={`text-[9px] font-bold py-1 px-2.5 rounded-full border transition-all cursor-pointer ${
+                                        visitorContext === tag
+                                          ? "bg-white text-[#d01c00] border-white"
+                                          : "bg-black/25 text-white/60 border-white/10 hover:border-white/30"
+                                      }`}
+                                    >
+                                      {tag}
+                                    </button>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
 
-                            {/* Action Button inside Form */}
-                            <button
-                              onClick={sendConnectionStub}
-                              className="w-full py-3 rounded-[12px] font-bold text-white text-[13px] flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.98] transition-all border border-amber-300/30"
-                              style={{
-                                background: "linear-gradient(135deg, #FF9B04, #d01c00)",
-                              }}
+                              <button
+                                onClick={sendConnectionStub}
+                                className="w-full py-2.5 rounded-[12px] font-bold text-white text-[12.5px] flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.98] transition-all border border-amber-300/30"
+                                style={{
+                                  background: "linear-gradient(135deg, #FF9B04, #d01c00)",
+                                }}
+                              >
+                                Send Connection Stub ⚡️
+                              </button>
+                            </motion.div>
+                          ) : (
+                            /* CARD DETAILS */
+                            <motion.div
+                              key="credentials-card"
+                              animate={{ opacity: isTorn ? 0 : 1, y: isTorn ? -15 : 0 }}
+                              transition={{ duration: 0.4 }}
+                              className="flex flex-col"
                             >
-                              Send VIP Connection Stub ⚡️
-                            </button>
-                          </motion.div>
-                        ) : (
-                          /* STANDARD EXECUTIVE CREDENTIALS CARD FRONT (Fades out when torn) */
-                          <motion.div
-                            key="credentials-card"
-                            animate={{ opacity: isTorn ? 0 : 1, y: isTorn ? -20 : 0 }}
-                            transition={{ duration: 0.4 }}
-                            className="flex flex-col mt-4"
+                              <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-white/50 uppercase mb-1">Executive Holder</span>
+                              
+                              <div className="flex flex-col leading-none">
+                                <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)]">
+                                  {firstName}
+                                </h2>
+                                <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] mt-0.5">
+                                  {lastName}
+                                </h2>
+                              </div>
+
+                              <div className="flex items-center gap-3.5 mt-4">
+                                <div className="w-[45px] h-[45px] rounded-full overflow-hidden border-2 border-white/40 shadow-lg bg-white/10 shrink-0">
+                                  <Image
+                                    src={member.photo}
+                                    alt={member.name}
+                                    width={45}
+                                    height={45}
+                                    priority
+                                    className="rounded-full object-cover w-full h-full"
+                                  />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                  <span className="text-[13px] font-extrabold text-white leading-tight truncate">{member.title}</span>
+                                  <span className="text-[11px] font-mono font-bold tracking-widest text-white/70 uppercase mt-0.5 truncate">{member.company}</span>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </motion.div>
+
+                    {/* ── LIVE DIRECT-ON-CARD PERFORATION DRAG TRACK ── */}
+                    {!isTorn && (
+                      <div
+                        ref={trackRef}
+                        className="w-[92%] h-8 absolute top-[314px] left-[4%] z-30 flex items-center select-none cursor-pointer"
+                      >
+                        {/* Laser-Cut Perforation Line behind Scissor Handle */}
+                        <div className="absolute left-0 right-0 h-[2.5px] overflow-hidden rounded-full">
+                          {/* Laser glow laser-cut track (Left of scissor) */}
+                          <div
+                            className="absolute top-0 left-0 bottom-0 bg-[#FF9B04] shadow-[0_0_10px_#FFBB00]"
+                            style={{ width: `${dragProgressPercent}%` }}
+                          />
+                          {/* Standard Uncut dotted perforation line (Right of scissor) */}
+                          <div
+                            className="absolute top-0 right-0 bottom-0 border-t-2 border-dashed border-white/30"
+                            style={{ left: `${dragProgressPercent}%` }}
+                          />
+                        </div>
+
+                        {/* Interactive Drag Scissor Handle */}
+                        <motion.div
+                          drag="x"
+                          dragDirectionLock
+                          dragElastic={0}
+                          dragMomentum={false}
+                          dragConstraints={{ left: 0, right: trackWidth }}
+                          onDragStart={() => setIsDragging(true)}
+                          onDragEnd={() => {
+                            setIsDragging(false);
+                            // If they let go before hitting 96% completion, spring-bounce back to left!
+                            if (dragX.get() < trackWidth - 12) {
+                              animate(dragX, 0, { type: "spring", stiffness: 220, damping: 20 });
+                            }
+                          }}
+                          onDrag={() => {
+                            if (dragX.get() >= trackWidth - 8) {
+                              handleTear();
+                            }
+                          }}
+                          style={{ x: dragX }}
+                          className="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_4px_14px_rgba(251,191,36,0.6)] border border-yellow-200/40 z-40 shrink-0"
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {/* Golden scissor blade snip-snip drag snip animation */}
+                          <motion.svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#4d2d00"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            animate={isDragging ? {
+                              rotate: [0, 15, -15, 0],
+                            } : { rotate: 0 }}
+                            transition={isDragging ? {
+                              repeat: Infinity,
+                              duration: 0.3,
+                            } : {}}
                           >
-                            <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-white/50 uppercase mb-1">Executive Holder</span>
-                            
-                            <div className="flex flex-col leading-none">
-                              <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
-                                {firstName}
-                              </h2>
-                              <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
-                                {lastName}
-                              </h2>
-                            </div>
+                            <circle cx="6" cy="6" r="3" />
+                            <circle cx="6" cy="18" r="3" />
+                            <line x1="9.8" y1="8.2" x2="21" y2="17" />
+                            <line x1="21" y1="7" x2="9.8" y2="15.8" />
+                          </motion.svg>
+                        </motion.div>
+                      </div>
+                    )}
 
-                            {/* Golden border stamped circular photo + details */}
-                            <div className="flex items-center gap-3.5 mt-5">
-                              <div className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-white/40 shadow-lg bg-white/10 shrink-0">
-                                <Image
-                                  src={member.photo}
-                                  alt={member.name}
-                                  width={50}
-                                  height={50}
-                                  priority
-                                  className="rounded-full object-cover w-full h-full"
-                                />
-                              </div>
-                              <div className="flex flex-col min-w-0">
-                                <span className="text-[14px] font-extrabold text-white leading-tight truncate">{member.title}</span>
-                                <span className="text-[12px] font-mono font-bold tracking-widest text-white/70 uppercase mt-0.5 truncate">{member.company}</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {/* ── BOTTOM STUB SECTION (Tears away dynamically on click) ── */}
+                    {/* ── CARD BOTTOM HALF (THE STUB) ── */}
                     <AnimatePresence>
                       {!isTorn && (
                         <motion.div
                           initial={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 120, rotate: 4, scale: 0.95 }}
-                          transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-                          className="flex justify-between items-end z-10 relative pt-2 border-t border-dashed border-white/30"
+                          exit={{
+                            y: 180,
+                            opacity: 0,
+                            rotate: 7,
+                            scale: 0.9,
+                            transition: { duration: 0.55, ease: [0.36, 0.07, 0.19, 0.97] }
+                          }}
+                          className="w-full h-[150px] rounded-b-[24px] rounded-t-[8px] relative overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.18)] border-b border-x border-amber-300/30 p-6 flex flex-col justify-end"
+                          style={{
+                            background: "linear-gradient(180deg, #E65C00 0%, #9E1B00 100%)",
+                            backgroundImage: "linear-gradient(180deg, #E65C00 0%, #9E1B00 100%), radial-gradient(circle at 50% 0%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
+                            backgroundBlendMode: "overlay, normal, normal",
+                            marginTop: "-2px", // dynamic overlay boundary seam
+                          }}
                         >
-                          <div className="flex flex-col">
-                            <span className="text-[15px] font-black tracking-[0.18em] text-white/90 uppercase font-mono leading-none">VIP Access</span>
-                            <span className="text-[9px] font-mono tracking-wider text-white/50 uppercase mt-1">Direct Connection Key</span>
-                          </div>
-                          
-                          <div className="flex flex-col items-end">
-                            <span className="text-[11px] font-mono font-bold tracking-wider text-white/90 uppercase">Code:</span>
-                            <span className="text-[11px] font-mono font-bold tracking-wider text-white/80 mt-0.5">C13-{member.slug.toUpperCase()}-2026</span>
+                          {/* Notch half-punches at top edge */}
+                          <div className="absolute -left-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
+                          <div className="absolute -right-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />
+
+                          <div className="flex justify-between items-end z-10 relative">
+                            <div className="flex flex-col">
+                              <span className="text-[15px] font-black tracking-[0.18em] text-white/90 uppercase font-mono leading-none">VIP Access</span>
+                              <span className="text-[9px] font-mono tracking-wider text-white/50 uppercase mt-1">Direct Connection Key</span>
+                            </div>
+                            
+                            <div className="flex flex-col items-end">
+                              <span className="text-[11px] font-mono font-bold tracking-wider text-white/90 uppercase">Code:</span>
+                              <span className="text-[11px] font-mono font-bold tracking-wider text-white/80 mt-0.5">C13-{member.slug.toUpperCase()}-2026</span>
+                            </div>
                           </div>
                         </motion.div>
                       )}
@@ -365,77 +466,20 @@ END:VCARD`;
                 );
               })()}
 
-              {/* ── BOTTOM MODAL ACTION BUTTONS (Swiper Track + vCard option) ── */}
+              {/* ── SAVE CONTACT BUTTON (Only displays when not torn) ── */}
               <AnimatePresence>
                 {!isTorn && (
                   <motion.div
                     initial={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="w-full flex flex-col gap-3.5 z-10 mt-1"
+                    className="w-full mt-1.5 z-10"
                   >
-                    {/* Interactive Swipe-to-Cut Perforation Scissor Track */}
-                    <div className="w-full bg-white/5 border border-white/10 rounded-[20px] h-16 relative flex items-center p-1.5 overflow-hidden backdrop-blur-md shadow-lg select-none">
-                      {/* Shimmering dragging instruction label */}
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/40 uppercase animate-pulse select-none">
-                          Swipe Scissor to Cut Perforation ✂️
-                        </span>
-                      </div>
-
-                      {/* Touch Drag Gold Handle containing gold scissor icon */}
-                      <motion.div
-                        drag="x"
-                        dragDirectionLock
-                        dragElastic={0}
-                        dragMomentum={false}
-                        dragConstraints={{ left: 0, right: 268 }}
-                        onDragStart={() => setIsDragging(true)}
-                        onDragEnd={() => setIsDragging(false)}
-                        onDrag={(event, info) => {
-                          if (info.offset.x >= 256) {
-                            handleTear();
-                          }
-                        }}
-                        className="w-12 h-12 rounded-[14px] bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-lg border border-yellow-200/40 z-10 shrink-0"
-                        style={{
-                          boxShadow: "0 4px 14px rgba(251, 191, 36, 0.4)",
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {/* Dynamic Snip-Snip Scissor Icon */}
-                        <motion.svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#4d2d00"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          animate={isDragging ? {
-                            rotate: [0, 15, -15, 0],
-                          } : { rotate: 0 }}
-                          transition={isDragging ? {
-                            repeat: Infinity,
-                            duration: 0.35,
-                          } : {}}
-                        >
-                          <circle cx="6" cy="6" r="3" />
-                          <circle cx="6" cy="18" r="3" />
-                          <line x1="9.8" y1="8.2" x2="21" y2="17" />
-                          <line x1="21" y1="7" x2="9.8" y2="15.8" />
-                        </motion.svg>
-                      </motion.div>
-                    </div>
-
-                    {/* Download vCard Button (Direct Phonebook Save) */}
                     <button
                       onClick={downloadvCard}
-                      className="w-full py-3.5 rounded-[16px] font-bold text-white/80 hover:text-white text-[13.5px] flex items-center justify-center gap-1.5 cursor-pointer bg-white/5 border border-white/15 hover:bg-white/10 transition-all active:scale-[0.98]"
+                      className="w-full py-3.5 rounded-[16px] font-bold text-white/85 hover:text-white text-[13.5px] flex items-center justify-center gap-1.5 cursor-pointer bg-white/5 border border-white/15 hover:bg-white/10 transition-all active:scale-[0.98]"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4" />
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7 10 12 15 17 10" />
                         <line x1="12" y1="15" x2="12" y2="3" />
                       </svg>
