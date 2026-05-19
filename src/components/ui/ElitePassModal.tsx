@@ -333,10 +333,10 @@ END:VCARD`;
                           <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
                         </div>
                         
-                        {/* Concentric Golden Stamp debossed C13 */}
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0 select-none">
-                          <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
-                          <div className="font-sans font-[900] text-[20px] text-[#4d2d00] tracking-tighter drop-shadow-[0_1.5px_0px_rgba(255,255,255,0.4)] select-none">
+                        {/* Liquid Glass C13 Logo */}
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center relative shrink-0 select-none liquid-glass !rounded-full shadow-lg">
+                          <div className="absolute inset-0 bg-white/10 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
+                          <div className="font-sans font-[900] text-[22px] text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] select-none relative z-10">
                             C13
                           </div>
                         </div>
