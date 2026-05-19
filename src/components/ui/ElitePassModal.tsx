@@ -124,80 +124,105 @@ END:VCARD`;
                 </svg>
               </button>
 
-              {/* 3D Elite Pass card */}
-              <div
-                ref={cardRef}
-                className="w-full h-[480px] rounded-[24px] relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/20 p-6 flex flex-col justify-between"
-                style={{
-                  background: "linear-gradient(135deg, rgba(25, 25, 30, 0.75), rgba(15, 15, 18, 0.85))",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                }}
-              >
-                {/* Holographic chrome light leak layer */}
-                <div
-                  className="absolute inset-0 pointer-events-none opacity-20"
-                  style={{
-                    background: "linear-gradient(125deg, rgba(255,214,10,0.2) 0%, rgba(10,132,255,0.2) 50%, rgba(48,209,88,0.2) 100%)",
-                  }}
-                />
+              {/* Double-stack name parts for YC-styled typography */}
+              {(() => {
+                const nameParts = member.name.split(" ");
+                const firstName = nameParts[0] || "";
+                const lastName = nameParts.slice(1).join(" ") || "";
 
-                {/* Top Section */}
-                <div className="flex justify-between items-start z-10">
-                  <div className="flex flex-col">
-                    <span className="text-[11px] font-bold tracking-[0.15em] text-white/40 uppercase">Circle13 Member Pass</span>
-                    <span className="text-[18px] font-black tracking-tight text-white mt-0.5">ELITE PARTNER</span>
-                  </div>
-                  {/* Executive Smart Chip representation */}
-                  <div className="w-[38px] h-[30px] rounded-[6px] bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 border border-amber-600/30 flex flex-col justify-between p-1 shadow-inner relative overflow-hidden">
-                    <div className="absolute inset-0 bg-white/10 skew-x-12" />
-                    <div className="w-full h-[0.5px] bg-black/20" />
-                    <div className="w-full h-[0.5px] bg-black/20" />
-                    <div className="w-full h-[0.5px] bg-black/20" />
-                  </div>
-                </div>
-
-                {/* Mid Section — Member Details */}
-                <div className="flex items-center gap-4 z-10">
-                  <div className="w-[68px] h-[68px] rounded-full overflow-hidden border border-white/20 p-1 bg-white/5 shrink-0 shadow-md">
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      width={68}
-                      height={68}
-                      priority
-                      className="rounded-full object-cover w-full h-full"
+                return (
+                  <div
+                    ref={cardRef}
+                    className="w-full h-[480px] rounded-[24px] relative overflow-hidden shadow-[0_25px_60px_rgba(230,92,0,0.35)] border border-amber-300/30 p-6 flex flex-col justify-between"
+                    style={{
+                      background: "linear-gradient(135deg, #FF9B04 0%, #E65C00 60%, #9E1B00 100%)",
+                      backgroundImage: "linear-gradient(135deg, #FF9B04 0%, #E65C00 60%, #9E1B00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
+                      backgroundBlendMode: "overlay, normal, normal",
+                    }}
+                  >
+                    {/* Holographic light reflect overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-20"
+                      style={{
+                        background: "linear-gradient(125deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%)",
+                      }}
                     />
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="text-[20px] font-extrabold text-white leading-tight truncate">{member.name}</h2>
-                    <p className="text-[13px] font-semibold text-white/70 truncate mt-0.5">{member.title}</p>
-                    <p className="text-[12px] font-semibold text-[#0A84FF] tracking-wider truncate mt-0.5 uppercase">{member.company}</p>
-                  </div>
-                </div>
 
-                {/* Bottom Section — Custom QR Grid & Network Pass details */}
-                <div className="flex items-end justify-between z-10">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-bold tracking-[0.1em] text-white/30 uppercase">Verification Code</span>
-                    <span className="text-[13px] font-mono tracking-wider text-white/80">C13-{member.slug.toUpperCase()}-2026</span>
-                  </div>
+                    {/* Left/Right physical ticket punch holes */}
+                    <div className="absolute -left-3.5 top-[72%] w-7 h-7 rounded-full bg-black/90 backdrop-blur-md border-r border-white/10 z-20" />
+                    <div className="absolute -right-3.5 top-[72%] w-7 h-7 rounded-full bg-black/90 backdrop-blur-md border-l border-white/10 z-20" />
 
-                  {/* Elegant High-End Custom SVG QR */}
-                  <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-[12px] flex items-center justify-center p-2 backdrop-blur-md">
-                    <svg viewBox="0 0 24 24" className="w-full h-full text-white/90" fill="currentColor">
-                      <path d="M0 0h6v6H0zm2 2h2v2H0zm0 8h2v2H0zm8-10h6v6h-6zm2 2h2v2h-2zm-12 14h6v6H0zm2 2h2v2H0zm8 0h2v2h-2zm4-6h2v2h-2zm2-2h4v2h-4zm0 6h4v2h-4zm-4-4h2v2h-2zm6-4h2v2h-2zm2-2h2v2h-2zm-6-2h2v2h-2zm8 8v4h-2v-4z" />
-                    </svg>
+                    {/* Dotted Perforation Line */}
+                    <div className="absolute left-4 right-4 top-[75%] z-10 border-t-2 border-dashed border-white/30" />
+
+                    {/* ── TOP SECTION ── */}
+                    <div className="flex justify-between items-start z-10 relative">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/70 uppercase">Circle13 Presents</span>
+                        <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Golden Pass</span>
+                      </div>
+                      
+                      {/* Premium Golden Foil Shark Seal */}
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0">
+                        <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
+                        <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#4d2d00] drop-shadow-md" fill="currentColor">
+                          <path d="M21.9,11.6c-0.2-0.2-0.6-0.3-0.9-0.1c-1.3,0.8-2.9,1.1-4.4,0.9c-0.7-0.1-1.3-0.3-2-0.6c-0.5-0.2-0.9-0.5-1.4-0.8c-1.2-0.8-2.5-1.2-3.9-1.2c-1.5,0-2.9,0.5-4,1.4c-0.3,0.3-0.3,0.8,0,1.1s0.8,0.3,1.1,0c0.8-0.7,1.8-1.1,2.9-1.1c1,0,2,0.3,2.9,0.9c0.5,0.3,1,0.6,1.5,0.8c0.7,0.3,1.5,0.6,2.3,0.7c1.7,0.2,3.5-0.1,5-1C22.2,12.4,22.1,11.9,21.9,11.6z M12.8,4.5c-0.4-0.3-0.9-0.2-1.2,0.2c-0.8,1.2-1.2,2.6-1.2,4.1c0,0.5,0.4,0.9,0.9,0.9s0.9-0.4,0.9-0.9c0-1.1,0.3-2.1,0.8-3C13.2,5.3,13.1,4.8,12.8,4.5z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* ── MIDDLE SECTION — YC-STYLE HUGE CONDENSED TYPOGRAPHY ── */}
+                    <div className="flex flex-col z-10 relative">
+                      <div className="flex flex-col leading-none">
+                        <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
+                          {firstName}
+                        </h2>
+                        <h2 className="text-[34px] font-black text-white tracking-tighter uppercase font-[family-name:var(--font-display)] mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)]">
+                          {lastName}
+                        </h2>
+                      </div>
+
+                      {/* Golden border stamped circular photo + details */}
+                      <div className="flex items-center gap-3.5 mt-5">
+                        <div className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-white/40 shadow-lg bg-white/10 shrink-0">
+                          <Image
+                            src={member.photo}
+                            alt={member.name}
+                            width={50}
+                            height={50}
+                            priority
+                            className="rounded-full object-cover w-full h-full"
+                          />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[14px] font-extrabold text-white leading-tight truncate">{member.title}</span>
+                          <span className="text-[12px] font-mono font-bold tracking-widest text-white/70 uppercase mt-0.5 truncate">{member.company}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ── BOTTOM STUB SECTION ── */}
+                    <div className="flex justify-between items-end z-10 relative pt-2">
+                      <div className="flex flex-col">
+                        <span className="text-[16px] font-black tracking-[0.25em] text-white/90 uppercase font-mono leading-none">Admit One</span>
+                        <span className="text-[9px] font-mono tracking-wider text-white/50 uppercase mt-1">C13 Elite Network Pass</span>
+                      </div>
+                      
+                      <div className="flex flex-col items-end">
+                        <span className="text-[11px] font-mono font-bold tracking-wider text-white/90 uppercase">Code:</span>
+                        <span className="text-[11px] font-mono font-bold tracking-wider text-white/80 mt-0.5">C13-{member.slug.toUpperCase()}-2026</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* NFC Direct Connect Save Contact Trigger Button */}
               <button
                 onClick={downloadvCard}
-                className="w-full py-4 rounded-[16px] font-bold text-white text-[15px] flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_16px_rgba(10,132,255,0.25)] hover:brightness-110 active:scale-[0.98] transition-all"
+                className="w-full py-4 rounded-[16px] font-bold text-white text-[15px] flex items-center justify-center gap-2 cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.3)] hover:brightness-110 active:scale-[0.98] transition-all border border-amber-400/20"
                 style={{
-                  background: "linear-gradient(135deg, #0A84FF, #409CFF)",
+                  background: "linear-gradient(135deg, #FF9B04, #E65C00)",
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -205,7 +230,7 @@ END:VCARD`;
                   <polyline points="17 21 17 13 7 13 7 21" />
                   <polyline points="7 3 7 8 15 8" />
                 </svg>
-                Save Contact Pass (vCard)
+                Claim Golden Pass (vCard)
               </button>
             </motion.div>
           </motion.div>
