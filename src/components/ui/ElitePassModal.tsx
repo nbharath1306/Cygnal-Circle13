@@ -13,8 +13,9 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
 
   // Initialize Tilt on Modal Card
   useEffect(() => {
-    if (isOpen && cardRef.current) {
-      VanillaTilt.init(cardRef.current, {
+    const cardEl = cardRef.current;
+    if (isOpen && cardEl) {
+      VanillaTilt.init(cardEl, {
         max: 15,
         speed: 600,
         scale: 1.03,
@@ -25,7 +26,7 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
       });
     }
     return () => {
-      const el = cardRef.current as HTMLElement & { vanillaTilt?: { destroy: () => void } };
+      const el = cardEl as HTMLElement & { vanillaTilt?: { destroy: () => void } } | null;
       el?.vanillaTilt?.destroy();
     };
   }, [isOpen]);

@@ -229,7 +229,11 @@ export default function MemberEditor() {
     const newIndex = links.findIndex((l) => l._id === over.id);
     const reordered = arrayMove(links, oldIndex, newIndex);
     // Strip _id before saving
-    sections[sectionIndex].links = reordered.map(({ _id, ...rest }) => rest);
+    sections[sectionIndex].links = reordered.map((l) => {
+      const { _id, ...rest } = l;
+      void _id;
+      return rest;
+    });
     update({ sections });
   };
 
@@ -400,6 +404,7 @@ export default function MemberEditor() {
                       link={{ ...link, _id: `${si}-${li}` }}
                       onUpdate={(updated) => {
                         const { _id, ...rest } = updated;
+                        void _id;
                         updateLink(si, li, rest);
                       }}
                       onRemove={() => removeLink(si, li)}

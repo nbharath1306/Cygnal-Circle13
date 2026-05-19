@@ -9,6 +9,7 @@ import { LiquidBackground } from "@/components/ui/LiquidBackground";
 import { ActiveRadarStats } from "@/components/ui/ActiveRadarStats";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -40,9 +41,11 @@ export default async function MemberPage({ params }: { params: Params }) {
         {/* Background — fixed, no parallax */}
         <div className="fixed inset-0 -z-10">
           {member.coverPhoto ? (
-            <img
+            <Image
               src={member.coverPhoto}
               alt=""
+              fill
+              priority
               className="w-full h-full object-cover brightness-[0.7] saturate-[1.1] scale-105"
             />
           ) : (

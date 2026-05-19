@@ -15,11 +15,13 @@ export default function AdminLayout({
   // Check if PIN is stored in sessionStorage
   useEffect(() => {
     const stored = sessionStorage.getItem("admin-pin");
-    if (stored) {
-      setPin(stored);
-      setAuthenticated(true);
-    }
-    setChecking(false);
+    setTimeout(() => {
+      if (stored) {
+        setPin(stored);
+        setAuthenticated(true);
+      }
+      setChecking(false);
+    }, 0);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -5,7 +5,8 @@ let ctx: AudioContext | null = null;
 function getCtx() {
   if (typeof window === "undefined") return null;
   if (!ctx) {
-    ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const WinWithAudio = window as typeof window & { webkitAudioContext?: typeof AudioContext };
+    ctx = new (WinWithAudio.AudioContext || WinWithAudio.webkitAudioContext)();
   }
   if (ctx.state === "suspended") {
     ctx.resume();
@@ -149,7 +150,7 @@ export function playHover() {
 
     osc.start(now);
     osc.stop(now + 0.05);
-  } catch (e) {
+  } catch {
     // silent fail
   }
 }
@@ -200,7 +201,7 @@ export function playSuccess() {
     subOsc.start(now);
     subOsc.stop(now + 0.7);
 
-  } catch (e) {
+  } catch {
     // silent fail
   }
 }

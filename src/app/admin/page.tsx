@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Plus, User, ChevronRight } from "lucide-react";
 import { useAdminPin } from "./layout";
 import type { TeamMember } from "@/data/types";
@@ -118,9 +119,11 @@ export default function AdminHome() {
               className="group flex items-center gap-4 p-4 rounded-2xl bg-bg-elevated border border-border-default hover:border-border-hover hover:bg-bg-subtle transition-all"
             >
               {m.photo ? (
-                <img
+                <Image
                   src={m.photo}
                   alt={m.name}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-full object-cover ring-2 ring-border-default"
                 />
               ) : (
