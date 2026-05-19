@@ -12,18 +12,23 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
   const [isTorn, setIsTorn] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [visitorName, setVisitorName] = useState("");
-  const [visitorContact, setVisitorContact] = useState("");
-  const [visitorContext, setVisitorContext] = useState("⚡️ Met Just Now");
+
+  // Executive Credentials States
+  const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
+  const [meetingContext, setMeetingContext] = useState("");
+
   const cardRef = useRef<HTMLDivElement>(null);
   
-  // Scissor track tracking
+  // Scissor drag tracking
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(296); // default fallback
   const dragX = useMotionValue(0);
   const [dragProgressPercent, setDragProgressPercent] = useState(0);
 
-  // Monitor dragX to update visual cut progress percentage
+  // Monitor drag progress to display real-time physical slicing
   useEffect(() => {
     const unsubscribe = dragX.on("change", (latest) => {
       if (trackWidth > 0) {
@@ -33,25 +38,24 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
     return () => unsubscribe();
   }, [dragX, trackWidth]);
 
-  // Track container width dynamically on open
+  // Read track width dynamically
   useEffect(() => {
     if (isOpen && trackRef.current) {
-      // Container is roughly 332px inside modal padding, handle is 36px wide
       setTrackWidth(trackRef.current.offsetWidth - 36);
     }
   }, [isOpen]);
 
-  // Initialize Tilt on Modal Card (only if not torn to allow stable dragging/inputs)
+  // Initialize Tilt on Modal Card (only if not cut to allow steady dragging)
   useEffect(() => {
     const cardEl = cardRef.current;
     if (isOpen && cardEl && !isTorn) {
       VanillaTilt.init(cardEl, {
-        max: 12,
+        max: 10,
         speed: 600,
-        scale: 1.02,
+        scale: 1.01,
         perspective: 1000,
         glare: true,
-        "max-glare": 0.3,
+        "max-glare": 0.25,
         easing: "cubic-bezier(0.23, 1, 0.32, 1)",
       });
     }
@@ -61,7 +65,7 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
     };
   }, [isOpen, isTorn]);
 
-  // Reset modal state when closed
+  // Reset modal state on close
   const toggleModal = () => {
     playTap();
     if (isOpen) {
@@ -69,9 +73,11 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
       setShowForm(false);
       dragX.set(0);
       setDragProgressPercent(0);
-      setVisitorName("");
-      setVisitorContact("");
-      setVisitorContext("⚡️ Met Just Now");
+      setFullName("");
+      setCompany("");
+      setPosition("");
+      setContactInfo("");
+      setMeetingContext("");
     }
     setIsOpen(!isOpen);
   };
@@ -82,35 +88,35 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
     setIsTorn(true);
     setTimeout(() => {
       setShowForm(true);
-    }, 500); // Delay matches framer-motion exit duration
+    }, 650); // Matches the gravity exit duration
   };
 
-  // Compile lead inputs and redirect directly to WhatsApp or Email
+  // Compile credentials and redirect to WhatsApp/Email follow-up template
   const sendConnectionStub = () => {
     playTap();
-    if (!visitorName.trim()) {
-      alert("Please enter your name to claim the pass!");
+    if (!fullName.trim() || !company.trim() || !position.trim()) {
+      alert("Please fill in your Full Name, Company, and Executive Position to send the connection key!");
       return;
     }
 
     const whatsappLink = member.socials.find((s) => s.platform === "WhatsApp")?.url || "";
     const email = member.socials.find((s) => s.platform === "Email")?.url || "";
 
-    const messageText = `Hey ${member.name}! Met you just now and claimed your Circle13 Executive Pass. Let's connect! ⚡️\n\n👤 Name: ${visitorName}\n🔗 LinkedIn/Email: ${visitorContact || "Not provided"}\n📍 Context: ${visitorContext}`;
+    const messageText = `Circle13 Executive Connection Request 🤝\n\nHello ${member.name.split(" ")[0]},\n\nIt was great meeting you! I've claimed my Executive Connection Pass. Here are my credentials so we can stay in touch:\n\n👤 Name: ${fullName}\n🏢 Company: ${company}\n💼 Position: ${position}\n🔗 Contact: ${contactInfo || "Not provided"}\n\n📝 Context & Next Steps:\n${meetingContext || "Let's connect and explore synergy soon!"}\n\nBest regards,\n${fullName}`;
 
     if (whatsappLink) {
       const cleanWaUrl = whatsappLink.split("?")[0];
       const waRedirectUrl = `${cleanWaUrl}?text=${encodeURIComponent(messageText)}`;
       window.open(waRedirectUrl, "_blank");
     } else if (email) {
-      const mailtoUrl = `mailto:${email.replace("mailto:", "")}?subject=Circle13 Connection Stub Claimed&body=${encodeURIComponent(messageText)}`;
+      const mailtoUrl = `mailto:${email.replace("mailto:", "")}?subject=Circle13 Executive Connection Request&body=${encodeURIComponent(messageText)}`;
       window.open(mailtoUrl, "_blank");
     } else {
-      alert("Direct direct connection methods are not configured, but your stub request was triggered!");
+      alert("Direct connection methods are not configured, but your request was successfully registered!");
     }
   };
 
-  // NFC vCard client-side download generator
+  // NFC vCard save contact download
   const downloadvCard = () => {
     playTap();
     const email = member.socials.find((s) => s.platform === "Email")?.url.replace("mailto:", "") || "";
@@ -168,7 +174,7 @@ END:VCARD`;
         </svg>
       </motion.button>
 
-      {/* Fullscreen Overlay & Modal */}
+      {/* Overlay & Modal */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -197,31 +203,36 @@ END:VCARD`;
                 </svg>
               </button>
 
-              {/* Double-stack name split logic */}
+              {/* Card Container */}
               {(() => {
                 const nameParts = member.name.split(" ");
                 const firstName = nameParts[0] || "";
                 const lastName = nameParts.slice(1).join(" ") || "";
 
                 return (
-                  <div className="w-full flex flex-col items-center relative select-none">
-                    
-                    {/* ── CARD TOP HALF (Unified Gradient, dynamically expands post-cut) ── */}
+                  <div
+                    className="w-full relative overflow-hidden select-none"
+                    style={{
+                      height: showForm ? "440px" : "480px",
+                    }}
+                  >
+                    {/* ── CARD TOP HALF (Absolute Seam locked, Unified Gradient) ── */}
                     <motion.div
                       ref={cardRef}
-                      className="w-full rounded-t-[24px] rounded-b-[8px] relative overflow-hidden shadow-[0_20px_50px_rgba(230,92,0,0.25)] border-t border-x border-amber-300/30 p-6 flex flex-col justify-between"
+                      className="absolute top-0 left-0 right-0 rounded-t-[24px] rounded-b-[6px] border-t border-x border-amber-300/30 p-6 flex flex-col justify-between overflow-hidden"
                       style={{
-                        background: "linear-gradient(135deg, #FF9B04 0%, #E65C00 100%)",
-                        backgroundImage: "linear-gradient(135deg, #FF9B04 0%, #E65C00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
+                        background: "linear-gradient(to bottom, #FF9B04 0%, #E65C00 100%)",
+                        backgroundImage: "linear-gradient(to bottom, #FF9B04 0%, #E65C00 100%), radial-gradient(circle at 50% 50%, transparent, rgba(0,0,0,0.18)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
                         backgroundBlendMode: "overlay, normal, normal",
-                        height: showForm ? "390px" : "330px",
+                        height: showForm ? "440px" : "330px",
+                        borderBottom: isTorn ? "1px solid rgba(251, 191, 36, 0.15)" : "none",
                       }}
                       animate={{
-                        height: showForm ? 390 : 330,
+                        height: showForm ? 440 : 330,
                       }}
                       transition={{ type: "spring", damping: 26, stiffness: 220 }}
                     >
-                      {/* Holographic light reflect overlay */}
+                      {/* Reflective light mask */}
                       <div
                         className="absolute inset-0 pointer-events-none opacity-20"
                         style={{
@@ -229,18 +240,18 @@ END:VCARD`;
                         }}
                       />
 
-                      {/* Physical punch notches at bottom edge */}
+                      {/* Notches aligned exactly at bottom seam */}
                       <div className="absolute -left-3.5 bottom-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
                       <div className="absolute -right-3.5 bottom-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />
 
-                      {/* Header */}
+                      {/* Top Header */}
                       <div className="flex justify-between items-start z-10 relative">
                         <div className="flex flex-col">
                           <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/70 uppercase">Circle13 Presents</span>
                           <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
                         </div>
                         
-                        {/* Concentric Golden Stamp Engraved C13 */}
+                        {/* Concentric Golden Stamp debossed C13 */}
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0 select-none">
                           <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
                           <div className="font-sans font-[900] text-[20px] text-[#4d2d00] tracking-tighter drop-shadow-[0_1.5px_0px_rgba(255,255,255,0.4)] select-none">
@@ -249,57 +260,64 @@ END:VCARD`;
                         </div>
                       </div>
 
-                      {/* Top Half Credentials / Dynamic Guest connection Form */}
+                      {/* TOP HALF MAIN CREDENTIALS / EXECUTIVE LEAD HANDSHAKE FORM */}
                       <div className="flex flex-col z-10 relative flex-1 justify-center">
                         <AnimatePresence mode="wait">
                           {showForm ? (
-                            /* VIP CONNECTION FORM */
+                            /* EXECUTIVE HANDSHAKE FORM */
                             <motion.div
-                              key="connection-form"
+                              key="handshake-form"
                               initial={{ opacity: 0, y: 15 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -15 }}
-                              className="flex flex-col gap-3 w-full mt-2"
+                              className="flex flex-col gap-2.5 w-full mt-1.5"
                             >
                               <div className="flex flex-col">
-                                <span className="text-[11px] font-mono font-bold tracking-[0.15em] text-yellow-200/90 uppercase">Submit Connection Stub</span>
-                                <span className="text-[10px] text-white/70 leading-tight mt-0.5">Met {member.name}? Enter your contact details:</span>
+                                <span className="text-[11px] font-mono font-bold tracking-[0.15em] text-yellow-200/90 uppercase">Secure Handshake request</span>
+                                <span className="text-[9.5px] text-white/70 leading-tight mt-0.5">Enter your professional details to establish connection with {member.name.split(" ")[0]}</span>
                               </div>
-                              
-                              <input
-                                type="text"
-                                placeholder="Your Name"
-                                value={visitorName}
-                                onChange={(e) => setVisitorName(e.target.value)}
-                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2 px-3 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
-                              />
-                              
-                              <input
-                                type="text"
-                                placeholder="LinkedIn profile or Email"
-                                value={visitorContact}
-                                onChange={(e) => setVisitorContact(e.target.value)}
-                                className="w-full bg-black/30 border border-white/15 rounded-[10px] py-2 px-3 text-[13px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
-                              />
 
-                              <div className="flex flex-col gap-1.5">
-                                <div className="flex flex-wrap gap-1.5">
-                                  {["⚡️ Met Just Now", "💼 Coffee/Pitch", "🚀 Collab"].map((tag) => (
-                                    <button
-                                      key={tag}
-                                      type="button"
-                                      onClick={() => setVisitorContext(tag)}
-                                      className={`text-[9px] font-bold py-1 px-2.5 rounded-full border transition-all cursor-pointer ${
-                                        visitorContext === tag
-                                          ? "bg-white text-[#d01c00] border-white"
-                                          : "bg-black/25 text-white/60 border-white/10 hover:border-white/30"
-                                      }`}
-                                    >
-                                      {tag}
-                                    </button>
-                                  ))}
-                                </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="Full Name"
+                                  value={fullName}
+                                  onChange={(e) => setFullName(e.target.value)}
+                                  className="w-full bg-black/35 border border-white/15 rounded-[10px] py-2 px-3 text-[12.5px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="LinkedIn or Email"
+                                  value={contactInfo}
+                                  onChange={(e) => setContactInfo(e.target.value)}
+                                  className="w-full bg-black/35 border border-white/15 rounded-[10px] py-2 px-3 text-[12.5px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                />
                               </div>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="Company / Org"
+                                  value={company}
+                                  onChange={(e) => setCompany(e.target.value)}
+                                  className="w-full bg-black/35 border border-white/15 rounded-[10px] py-2 px-3 text-[12.5px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Position / Title"
+                                  value={position}
+                                  onChange={(e) => setPosition(e.target.value)}
+                                  className="w-full bg-black/35 border border-white/15 rounded-[10px] py-2 px-3 text-[12.5px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors shadow-inner"
+                                />
+                              </div>
+
+                              <textarea
+                                placeholder="How we met & Collaboration Ideas... (e.g. met you at YC Mixer, coffee setup, pitch pitch)"
+                                value={meetingContext}
+                                onChange={(e) => setMeetingContext(e.target.value)}
+                                rows={2}
+                                className="w-full bg-black/35 border border-white/15 rounded-[10px] py-2 px-3 text-[12.5px] text-white placeholder-white/45 focus:outline-none focus:border-white transition-colors resize-none shadow-inner"
+                              />
 
                               <button
                                 onClick={sendConnectionStub}
@@ -308,16 +326,16 @@ END:VCARD`;
                                   background: "linear-gradient(135deg, #FF9B04, #d01c00)",
                                 }}
                               >
-                                Send Connection Stub ⚡️
+                                Send Handshake Credentials ⚡️
                               </button>
                             </motion.div>
                           ) : (
-                            /* CARD DETAILS */
+                            /* EXECUTIVE PROFILE DETAILS */
                             <motion.div
                               key="credentials-card"
                               animate={{ opacity: isTorn ? 0 : 1, y: isTorn ? -15 : 0 }}
                               transition={{ duration: 0.4 }}
-                              className="flex flex-col"
+                              className="flex flex-col mt-4"
                             >
                               <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-white/50 uppercase mb-1">Executive Holder</span>
                               
@@ -352,27 +370,27 @@ END:VCARD`;
                       </div>
                     </motion.div>
 
-                    {/* ── LIVE DIRECT-ON-CARD PERFORATION DRAG TRACK ── */}
+                    {/* ── REAL LIFE PHYSICAL SCISSOR CUTTING TRACK (Between Top and Bottom halves) ── */}
                     {!isTorn && (
                       <div
                         ref={trackRef}
                         className="w-[92%] h-8 absolute top-[314px] left-[4%] z-30 flex items-center select-none cursor-pointer"
                       >
-                        {/* Laser-Cut Perforation Line behind Scissor Handle */}
+                        {/* Physical split seam gap */}
                         <div className="absolute left-0 right-0 h-[2.5px] overflow-hidden rounded-full">
-                          {/* Laser glow laser-cut track (Left of scissor) */}
+                          {/* Sliced dark void gap (Left of scissor) */}
                           <div
-                            className="absolute top-0 left-0 bottom-0 bg-[#FF9B04] shadow-[0_0_10px_#FFBB00]"
+                            className="absolute top-0 left-0 bottom-0 bg-[#0d0d12] shadow-[inset_0_1px_3px_rgba(0,0,0,0.6)] border-t border-black"
                             style={{ width: `${dragProgressPercent}%` }}
                           />
-                          {/* Standard Uncut dotted perforation line (Right of scissor) */}
+                          {/* Uncut dashed perforation line (Right of scissor) */}
                           <div
-                            className="absolute top-0 right-0 bottom-0 border-t-2 border-dashed border-white/30"
+                            className="absolute top-0 right-0 bottom-0 border-t border-dashed border-white/30"
                             style={{ left: `${dragProgressPercent}%` }}
                           />
                         </div>
 
-                        {/* Interactive Drag Scissor Handle */}
+                        {/* Drag scissor handle */}
                         <motion.div
                           drag="x"
                           dragDirectionLock
@@ -382,7 +400,7 @@ END:VCARD`;
                           onDragStart={() => setIsDragging(true)}
                           onDragEnd={() => {
                             setIsDragging(false);
-                            // If they let go before hitting 96% completion, spring-bounce back to left!
+                            // Spring-loaded recoil back to start notch if let go early!
                             if (dragX.get() < trackWidth - 12) {
                               animate(dragX, 0, { type: "spring", stiffness: 220, damping: 20 });
                             }
@@ -397,7 +415,7 @@ END:VCARD`;
                           whileHover={{ scale: 1.08 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          {/* Golden scissor blade snip-snip drag snip animation */}
+                          {/* Real scissor blades cut motion */}
                           <motion.svg
                             width="18"
                             height="18"
@@ -424,27 +442,31 @@ END:VCARD`;
                       </div>
                     )}
 
-                    {/* ── CARD BOTTOM HALF (THE STUB) ── */}
+                    {/* ── CARD BOTTOM HALF (Perfect seam locking, seamless color continuity) ── */}
                     <AnimatePresence>
                       {!isTorn && (
                         <motion.div
                           initial={{ opacity: 1, y: 0 }}
                           exit={{
-                            y: 180,
-                            opacity: 0,
-                            rotate: 7,
-                            scale: 0.9,
-                            transition: { duration: 0.55, ease: [0.36, 0.07, 0.19, 0.97] }
+                            y: [0, 12, 190],
+                            rotate: [0, 3, 8],
+                            scale: [1, 0.98, 0.9],
+                            opacity: [1, 1, 0],
+                            transition: {
+                              times: [0, 0.16, 1], // keyframed snap and gravity drop physics
+                              duration: 0.65,
+                              ease: "easeIn",
+                            }
                           }}
-                          className="w-full h-[150px] rounded-b-[24px] rounded-t-[8px] relative overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.18)] border-b border-x border-amber-300/30 p-6 flex flex-col justify-end"
+                          className="absolute bottom-0 left-0 right-0 rounded-b-[24px] rounded-t-[6px] border-b border-x border-amber-300/30 p-6 flex flex-col justify-end overflow-hidden"
                           style={{
-                            background: "linear-gradient(180deg, #E65C00 0%, #9E1B00 100%)",
-                            backgroundImage: "linear-gradient(180deg, #E65C00 0%, #9E1B00 100%), radial-gradient(circle at 50% 0%, transparent, rgba(0,0,0,0.25)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
+                            background: "linear-gradient(to bottom, #E65C00 0%, #9E1B00 100%)",
+                            backgroundImage: "linear-gradient(to bottom, #E65C00 0%, #9E1B00 100%), radial-gradient(circle at 50% 0%, transparent, rgba(0,0,0,0.18)), url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E\")",
                             backgroundBlendMode: "overlay, normal, normal",
-                            marginTop: "-2px", // dynamic overlay boundary seam
+                            height: "152px",
                           }}
                         >
-                          {/* Notch half-punches at top edge */}
+                          {/* Punch notches matching exactly the seam */}
                           <div className="absolute -left-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-r border-white/10 z-20" />
                           <div className="absolute -right-3.5 top-[-14px] w-7 h-7 rounded-full bg-[#0d0d12] border-l border-white/10 z-20" />
 
@@ -466,7 +488,7 @@ END:VCARD`;
                 );
               })()}
 
-              {/* ── SAVE CONTACT BUTTON (Only displays when not torn) ── */}
+              {/* ── SAVE DIRECT CONTACT BUTTON ── */}
               <AnimatePresence>
                 {!isTorn && (
                   <motion.div
@@ -479,7 +501,7 @@ END:VCARD`;
                       className="w-full py-3.5 rounded-[16px] font-bold text-white/85 hover:text-white text-[13.5px] flex items-center justify-center gap-1.5 cursor-pointer bg-white/5 border border-white/15 hover:bg-white/10 transition-all active:scale-[0.98]"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7 10 12 15 17 10" />
                         <line x1="12" y1="15" x2="12" y2="3" />
                       </svg>
