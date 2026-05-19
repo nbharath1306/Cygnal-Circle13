@@ -198,7 +198,7 @@ END:VCARD`;
         aria-label="Open Elite Pass"
       >
         <span className="absolute right-16 scale-0 group-hover:scale-100 transition-all duration-200 origin-right bg-black/75 backdrop-blur-md text-white text-[11px] font-bold py-2 px-3 rounded-xl border border-white/10 shadow-lg pointer-events-none whitespace-nowrap tracking-wider uppercase">
-          Save Contact
+          C13
         </span>
 
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
@@ -633,7 +633,7 @@ END:VCARD`;
                         <polyline points="7 10 12 15 17 10" />
                         <line x1="12" y1="15" x2="12" y2="3" />
                       </svg>
-                      Save Direct Contact (vCard)
+                      C13
                     </button>
                   </motion.div>
                 )}
