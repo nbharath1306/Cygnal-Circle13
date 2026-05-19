@@ -11,6 +11,7 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isTorn, setIsTorn] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [visitorName, setVisitorName] = useState("");
   const [visitorContact, setVisitorContact] = useState("");
   const [visitorContext, setVisitorContext] = useState("⚡️ Met Just Now");
@@ -113,15 +114,15 @@ END:VCARD`;
 
   return (
     <>
-      {/* Floating Action Button (FAB) */}
+      {/* Floating Action Button (FAB) - Upgraded to Amber Gold Theme */}
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 2.2, type: "spring", stiffness: 260, damping: 20 }}
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_20px_rgba(10,132,255,0.3)] border border-white/20 active:scale-95 transition-transform group"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.4)] border border-amber-400/30 active:scale-95 transition-transform group"
         style={{
-          background: "linear-gradient(135deg, rgba(10, 132, 255, 0.8), rgba(64, 156, 255, 0.8))",
+          background: "linear-gradient(135deg, rgba(255, 155, 4, 0.85), rgba(230, 92, 0, 0.85))",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
         }}
@@ -217,12 +218,12 @@ END:VCARD`;
                         <span className="text-[15px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Executive Pass</span>
                       </div>
                       
-                      {/* Premium Golden Foil Shark Seal */}
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0">
+                      {/* Concentric Golden Foil Monogram Stamp (Engraved C13) */}
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 border border-yellow-200/50 flex items-center justify-center shadow-[0_4px_16px_rgba(251,191,36,0.4)] relative overflow-hidden shrink-0 select-none">
                         <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full animate-[shine_4s_infinite]" />
-                        <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#4d2d00] drop-shadow-md" fill="currentColor">
-                          <path d="M21.9,11.6c-0.2-0.2-0.6-0.3-0.9-0.1c-1.3,0.8-2.9,1.1-4.4,0.9c-0.7-0.1-1.3-0.3-2-0.6c-0.5-0.2-0.9-0.5-1.4-0.8c-1.2-0.8-2.5-1.2-3.9-1.2c-1.5,0-2.9,0.5-4,1.4c-0.3,0.3-0.3,0.8,0,1.1s0.8,0.3,1.1,0c0.8-0.7,1.8-1.1,2.9-1.1c1,0,2,0.3,2.9,0.9c0.5,0.3,1,0.6,1.5,0.8c0.7,0.3,1.5,0.6,2.3,0.7c1.7,0.2,3.5-0.1,5-1C22.2,12.4,22.1,11.9,21.9,11.6z M12.8,4.5c-0.4-0.3-0.9-0.2-1.2,0.2c-0.8,1.2-1.2,2.6-1.2,4.1c0,0.5,0.4,0.9,0.9,0.9s0.9-0.4,0.9-0.9c0-1.1,0.3-2.1,0.8-3C13.2,5.3,13.1,4.8,12.8,4.5z" />
-                        </svg>
+                        <div className="font-sans font-[900] text-[20px] text-[#4d2d00] tracking-tighter drop-shadow-[0_1.5px_0px_rgba(255,255,255,0.4)] select-none">
+                          C13
+                        </div>
                       </div>
                     </div>
 
@@ -364,29 +365,69 @@ END:VCARD`;
                 );
               })()}
 
-              {/* ── BOTTOM MODAL ACTION BUTTONS (Hidden when card is torn to focus on Lead Form) ── */}
+              {/* ── BOTTOM MODAL ACTION BUTTONS (Swiper Track + vCard option) ── */}
               <AnimatePresence>
                 {!isTorn && (
                   <motion.div
                     initial={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="w-full flex flex-col gap-2.5 z-10 mt-1"
+                    className="w-full flex flex-col gap-3.5 z-10 mt-1"
                   >
-                    {/* Tear & Claim VIP Connection Stub Button (Lead Gen CTA) */}
-                    <button
-                      onClick={handleTear}
-                      className="w-full py-4 rounded-[16px] font-bold text-white text-[14px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.3)] hover:brightness-110 active:scale-[0.98] transition-all border border-amber-400/25 relative overflow-hidden group"
-                      style={{
-                        background: "linear-gradient(135deg, #FF9B04, #E65C00)",
-                      }}
-                    >
-                      <span className="absolute inset-0 bg-white/10 skew-x-12 -translate-x-full group-hover:animate-[shine_2s_infinite]" />
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-0.5">
-                        <path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" />
-                        <path d="M12 11V13" />
-                      </svg>
-                      Tear & Claim VIP Stub
-                    </button>
+                    {/* Interactive Swipe-to-Cut Perforation Scissor Track */}
+                    <div className="w-full bg-white/5 border border-white/10 rounded-[20px] h-16 relative flex items-center p-1.5 overflow-hidden backdrop-blur-md shadow-lg select-none">
+                      {/* Shimmering dragging instruction label */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-white/40 uppercase animate-pulse select-none">
+                          Swipe Scissor to Cut Perforation ✂️
+                        </span>
+                      </div>
+
+                      {/* Touch Drag Gold Handle containing gold scissor icon */}
+                      <motion.div
+                        drag="x"
+                        dragDirectionLock
+                        dragElastic={0}
+                        dragMomentum={false}
+                        dragConstraints={{ left: 0, right: 268 }}
+                        onDragStart={() => setIsDragging(true)}
+                        onDragEnd={() => setIsDragging(false)}
+                        onDrag={(event, info) => {
+                          if (info.offset.x >= 256) {
+                            handleTear();
+                          }
+                        }}
+                        className="w-12 h-12 rounded-[14px] bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-lg border border-yellow-200/40 z-10 shrink-0"
+                        style={{
+                          boxShadow: "0 4px 14px rgba(251, 191, 36, 0.4)",
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {/* Dynamic Snip-Snip Scissor Icon */}
+                        <motion.svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#4d2d00"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          animate={isDragging ? {
+                            rotate: [0, 15, -15, 0],
+                          } : { rotate: 0 }}
+                          transition={isDragging ? {
+                            repeat: Infinity,
+                            duration: 0.35,
+                          } : {}}
+                        >
+                          <circle cx="6" cy="6" r="3" />
+                          <circle cx="6" cy="18" r="3" />
+                          <line x1="9.8" y1="8.2" x2="21" y2="17" />
+                          <line x1="21" y1="7" x2="9.8" y2="15.8" />
+                        </motion.svg>
+                      </motion.div>
+                    </div>
 
                     {/* Download vCard Button (Direct Phonebook Save) */}
                     <button
