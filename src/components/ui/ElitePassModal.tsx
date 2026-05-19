@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 import VanillaTilt from "vanilla-tilt";
+// Version bump: 2026-05-19-01
 import { playTap, playScissorSnip, playLuxuryUnlock, playHover } from "@/lib/sound";
 import type { TeamMember } from "@/data/types";
 import Image from "next/image";
