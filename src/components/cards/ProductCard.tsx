@@ -20,14 +20,14 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex-1 flex items-center justify-between gap-3 w-full">
         <div className="min-w-0 flex-1">
           <span
-            className="text-[17px] font-normal text-white leading-[22px]"
-            style={{ letterSpacing: "-0.408px" }}
+            className="text-[17px] font-semibold text-white leading-[22px]"
+            style={{ letterSpacing: "-0.408px", textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
           >
             {product.name}
           </span>
           <p
-            className="text-[13px] font-normal mt-0.5 leading-[18px]"
-            style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}
+            className="text-[13px] font-medium mt-1 leading-[18px] text-white/75"
+            style={{ letterSpacing: "-0.08px", textShadow: "0 1px 3px rgba(0,0,0,0.2)" }}
           >
             {product.tagline}
           </p>
@@ -35,14 +35,14 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="shrink-0 flex items-center gap-2.5">
           {product.status && (
             <span
-              className="text-[13px] font-medium"
-              style={{ letterSpacing: "-0.08px", color: statusColor[product.status] ?? "rgba(235,235,245,0.3)" }}
+              className="text-[13px] font-semibold"
+              style={{ letterSpacing: "-0.08px", color: statusColor[product.status] ?? "rgba(255, 255, 255, 0.75)", textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
             >
               {product.status}
             </span>
           )}
           <svg width="8" height="13" viewBox="0 0 8 13" fill="none">
-            <path d="M1.5 1.5L6.5 6.5L1.5 11.5" stroke="rgba(235,235,245,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M1.5 1.5L6.5 6.5L1.5 11.5" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>

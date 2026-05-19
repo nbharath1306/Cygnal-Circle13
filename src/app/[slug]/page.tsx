@@ -87,8 +87,8 @@ export default async function MemberPage({ params }: { params: Params }) {
               href="https://circle13.space"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[12px] tracking-[0.05em] transition-colors duration-300"
-              style={{ color: "rgba(235, 235, 245, 0.2)" }}
+              className="text-[12px] tracking-[0.05em] transition-colors duration-300 hover:text-white"
+              style={{ color: "rgba(255, 255, 255, 0.55)" }}
             >
               circle13.space
             </a>

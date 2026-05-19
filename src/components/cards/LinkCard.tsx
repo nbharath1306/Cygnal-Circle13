@@ -26,15 +26,15 @@ export function LinkCard({ link }: { link: Link }) {
       {/* Text — iOS Body + Subheadline */}
       <div className="flex-1 min-w-0">
         <span
-          className="text-[17px] font-normal block leading-[22px] text-white"
-          style={{ letterSpacing: "-0.408px" }}
+          className="text-[17px] font-semibold block leading-[22px] text-white"
+          style={{ letterSpacing: "-0.408px", textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
         >
           {link.label}
         </span>
         {link.description && (
           <span
-            className="text-[13px] font-normal block mt-0.5 leading-[18px]"
-            style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}
+            className="text-[13px] font-medium block mt-1 leading-[18px] text-white/75"
+            style={{ letterSpacing: "-0.08px", textShadow: "0 1px 3px rgba(0,0,0,0.2)" }}
           >
             {link.description}
           </span>
@@ -43,7 +43,7 @@ export function LinkCard({ link }: { link: Link }) {
 
       {/* iOS disclosure indicator */}
       <svg width="8" height="13" viewBox="0 0 8 13" fill="none" className="shrink-0">
-        <path d="M1.5 1.5L6.5 6.5L1.5 11.5" stroke="rgba(235,235,245,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M1.5 1.5L6.5 6.5L1.5 11.5" stroke="rgba(255, 255, 255, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </GlassCard>
   );

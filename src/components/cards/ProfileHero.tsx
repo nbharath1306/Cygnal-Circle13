@@ -99,8 +99,8 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 1.1, ease }}
-            className="mt-5 text-[34px] font-bold text-white leading-[1.06]"
-            style={{ letterSpacing: "0.374px" }}
+            className="mt-5 text-[35px] font-extrabold text-white leading-[1.06] tracking-tight"
+            style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
           >
             {member.name}
           </motion.h1>
@@ -110,8 +110,8 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 1.2, ease }}
-            className="mt-1 text-[15px] font-normal"
-            style={{ letterSpacing: "-0.24px", color: "rgba(235, 235, 245, 0.6)" }}
+            className="mt-1.5 text-[15px] font-semibold text-white/95"
+            style={{ letterSpacing: "-0.24px", textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
           >
             {member.title} · {member.company}
           </motion.p>
@@ -121,8 +121,8 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 1.3, ease }}
-            className="mt-4 text-[15px] font-normal max-w-[300px] leading-[1.47]"
-            style={{ letterSpacing: "-0.24px", color: "rgba(235, 235, 245, 0.3)" }}
+            className="mt-4 text-[15px] font-medium max-w-[300px] leading-[1.5] text-white/85"
+            style={{ letterSpacing: "-0.24px", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
           >
             {member.bio}
           </motion.p>
@@ -176,7 +176,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
           className="mt-5 flex items-center gap-2"
         >
           <span className="w-[6px] h-[6px] rounded-full bg-[#30D158] pulse-alive" />
-          <span className="text-[13px] font-normal" style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}>
+          <span className="text-[13px] font-semibold text-white/85" style={{ letterSpacing: "-0.08px", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>
             {member.status}
           </span>
         </motion.div>

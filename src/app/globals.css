@@ -100,23 +100,23 @@ body {
   transition: transform 0.08s;
 }
 
-/* Layer 1: SVG distortion filter on backdrop */
+/* Layer 1: SVG distortion filter on backdrop with high premium blur */
 .liquid-glass::after {
   content: "";
   position: absolute; inset: 0; z-index: -1;
   border-radius: inherit;
-  backdrop-filter: url(#liquid-glass-card) blur(1px);
-  -webkit-backdrop-filter: url(#liquid-glass-card) blur(1px);
+  backdrop-filter: url(#liquid-glass-card) blur(16px);
+  -webkit-backdrop-filter: url(#liquid-glass-card) blur(16px);
 }
 
-/* Layer 2: Glass body — CLEAR center, glow at EDGES only */
+/* Layer 2: Glass body — Deep elegant glass backing + edge inner glow */
 .liquid-glass::before {
   content: "";
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  /* NO flat tint — glass is clear, not grey */
-  background: transparent;
+  /* Deep translucent tint to make overlay text pop beautifully */
+  background: rgba(18, 18, 22, 0.45);
   /* Inner glow at edges only — this IS the glass */
   box-shadow:
     inset 0 0 20px -5px rgba(255, 255, 255, 0.55),
@@ -126,7 +126,7 @@ body {
 }
 
 .liquid-glass:hover::before {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(26, 26, 32, 0.55);
   box-shadow:
     inset 0 0 24px -4px rgba(255, 255, 255, 0.70),
     inset 0 1px 0 rgba(255, 255, 255, 0.40),
@@ -153,8 +153,8 @@ body {
   content: "";
   position: absolute; inset: 0; z-index: -1;
   border-radius: inherit;
-  backdrop-filter: url(#liquid-glass-panel) blur(1px);
-  -webkit-backdrop-filter: url(#liquid-glass-panel) blur(1px);
+  backdrop-filter: url(#liquid-glass-panel) blur(20px);
+  -webkit-backdrop-filter: url(#liquid-glass-panel) blur(20px);
 }
 
 .liquid-glass-panel::before {
@@ -162,7 +162,7 @@ body {
   position: absolute; inset: 0; z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: transparent;
+  background: rgba(18, 18, 22, 0.50);
   box-shadow:
     inset 0 0 28px -6px rgba(255, 255, 255, 0.50),
     inset 0 1px 0 rgba(255, 255, 255, 0.28),

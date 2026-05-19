@@ -7,10 +7,10 @@ export function Section({
 }) {
   return (
     <section>
-      {/* iOS grouped list header — 13px, uppercase, secondaryLabel, left padded */}
+      {/* Grouped section header — 13px, bold, uppercase, text-white/85, left padded */}
       <p
-        className="text-[13px] font-normal uppercase mb-2 px-5"
-        style={{ letterSpacing: "-0.08px", color: "rgba(235, 235, 245, 0.3)" }}
+        className="text-[13px] font-bold uppercase mb-2 px-5 tracking-[0.06em] text-white/85"
+        style={{ textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}
       >
         {title}
       </p>
