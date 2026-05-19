@@ -7,6 +7,7 @@ import VanillaTilt from "vanilla-tilt";
 import type { TeamMember } from "@/data/types";
 import { renderIcon } from "@/lib/icons";
 import { playTap } from "@/lib/sound";
+import { ElitePassModal } from "@/components/ui/ElitePassModal";
 
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
@@ -94,16 +95,48 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             </div>
           </motion.div>
 
-          {/* Name */}
-          <motion.h1
+          {/* Name & Holographic Badge */}
+          <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 1.1, ease }}
-            className="mt-5 text-[35px] font-extrabold text-white leading-[1.06] tracking-tight"
-            style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
+            className="mt-5 flex items-center justify-center gap-2.5 w-full px-4"
           >
-            {member.name}
-          </motion.h1>
+            <h1
+              className="text-[33px] sm:text-[35px] font-extrabold text-white leading-[1.06] tracking-tight select-none"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
+            >
+              {member.name}
+            </h1>
+            
+            {/* Holographic Verification Badge */}
+            <div className="relative group shrink-0">
+              <button
+                onClick={playTap}
+                className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-white border border-white/20 shadow-sm cursor-pointer select-none active:scale-90 transition-transform relative overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, #FFD60A, #64D2FF, #bfdbfe, #30D158)",
+                  backgroundSize: "200% 200%",
+                  animation: "holographic-glow 4s ease infinite alternate",
+                }}
+              >
+                {/* Iridescent shimmer overlay */}
+                <div className="absolute inset-0 bg-white/35 mix-blend-overlay animate-pulse" />
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black font-black drop-shadow-sm">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Luxury Tooltip */}
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[240px] p-3 rounded-[12px] bg-black/95 border border-white/10 text-left opacity-0 pointer-events-none group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md z-30">
+                <p className="text-[11px] font-extrabold text-[#0A84FF] tracking-wider uppercase">Circle13 Verified Founder</p>
+                <p className="text-[11px] font-medium text-white/90 mt-1 leading-[1.4]">
+                  Certified Founding Member of the Circle13 Elite Network. High-impact builder in AI & synthetic markets.
+                </p>
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black border-r border-b border-white/10 rotate-45" />
+              </div>
+            </div>
+          </motion.div>
 
           {/* Title */}
           <motion.p
@@ -181,6 +214,9 @@ export function ProfileHero({ member }: { member: TeamMember }) {
           </span>
         </motion.div>
       )}
+
+      {/* Elite Contact Pass FAB & Modal */}
+      <ElitePassModal member={member} />
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { LinkCard } from "@/components/cards/LinkCard";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Section } from "@/components/layout/Section";
 import { LiquidGlassFilter } from "@/components/ui/LiquidGlassFilter";
+import { LiquidBackground } from "@/components/ui/LiquidBackground";
+import { ActiveRadarStats } from "@/components/ui/ActiveRadarStats";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import type { Metadata } from "next";
 
@@ -31,6 +33,7 @@ export default async function MemberPage({ params }: { params: Params }) {
   return (
     <>
       <LiquidGlassFilter />
+      <LiquidBackground />
       <LoadingScreen />
 
       <main className="relative min-h-dvh max-w-[480px] mx-auto overflow-hidden">
@@ -51,6 +54,8 @@ export default async function MemberPage({ params }: { params: Params }) {
         {/* Content */}
         <div className="relative z-10 px-5 pt-14 sm:pt-20 pb-16">
           <ProfileHero member={member} />
+
+          <ActiveRadarStats />
 
           <div className="flex flex-col gap-8 mt-8">
             {member.sections.map((section, si) => (
