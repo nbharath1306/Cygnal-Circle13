@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react";
 import VanillaTilt from "vanilla-tilt";
 import type { TeamMember } from "@/data/types";
 import { renderIcon } from "@/lib/icons";
-import { playTap } from "@/lib/sound";
+import { playTap, playHover } from "@/lib/sound";
 import { ElitePassModal } from "@/components/ui/ElitePassModal";
 
 const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
@@ -112,6 +112,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
             {/* Holographic Verification Badge */}
             <div className="relative group shrink-0">
               <button
+                onMouseEnter={playHover}
                 onClick={playTap}
                 className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-white border border-white/20 shadow-sm cursor-pointer select-none active:scale-90 transition-transform relative overflow-hidden"
                 style={{
@@ -182,6 +183,7 @@ export function ProfileHero({ member }: { member: TeamMember }) {
                   target={social.url.startsWith("mailto:") ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={social.platform}
+                  onMouseEnter={playHover}
                   onClick={playTap}
                   className="
                     flex-1 flex items-center justify-center

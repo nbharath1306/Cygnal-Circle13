@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, animate } from "framer-motion";
 import VanillaTilt from "vanilla-tilt";
-import { playTap, playScissorSnip, playLuxuryUnlock } from "@/lib/sound";
+import { playTap, playScissorSnip, playLuxuryUnlock, playHover } from "@/lib/sound";
 import type { TeamMember } from "@/data/types";
 import Image from "next/image";
 
@@ -186,6 +186,7 @@ END:VCARD`;
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 2.2, type: "spring", stiffness: 260, damping: 20 }}
+        onMouseEnter={playHover}
         onClick={toggleModal}
         className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.4)] border border-amber-400/30 active:scale-95 transition-transform group"
         style={{
@@ -228,6 +229,7 @@ END:VCARD`;
             >
               {/* Close Button */}
               <button
+                onMouseEnter={playHover}
                 onClick={toggleModal}
                 className="absolute -top-12 right-2 text-white/50 hover:text-white cursor-pointer transition-colors"
                 aria-label="Close modal"
@@ -388,6 +390,7 @@ END:VCARD`;
                               />
 
                               <button
+                                onMouseEnter={playHover}
                                 onClick={sendConnectionStub}
                                 className="w-full py-2.5 rounded-[12px] font-bold text-white text-[12.5px] flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-110 active:scale-[0.98] transition-all border border-amber-300/30"
                                 style={{
@@ -588,6 +591,7 @@ END:VCARD`;
                     className="w-full mt-1.5 z-10"
                   >
                     <button
+                      onMouseEnter={playHover}
                       onClick={downloadvCard}
                       className="w-full py-3.5 rounded-[16px] font-bold text-white/85 hover:text-white text-[13.5px] flex items-center justify-center gap-1.5 cursor-pointer bg-white/5 border border-white/15 hover:bg-white/10 transition-all active:scale-[0.98]"
                     >

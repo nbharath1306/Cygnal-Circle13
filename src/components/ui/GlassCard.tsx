@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import VanillaTilt from "vanilla-tilt";
-import { playTap } from "@/lib/sound";
+import { playTap, playHover } from "@/lib/sound";
 
 interface GlassCardProps {
   children: React.ReactNode;
@@ -51,7 +51,11 @@ export function GlassCard({
   }, [tiltMax]);
 
   const inner = (
-    <div ref={ref} className={`liquid-glass ${className}`}>
+    <div
+      ref={ref}
+      className={`liquid-glass ${className}`}
+      onMouseEnter={playHover} // Auto-play high-fidelity luxury hover ticks!
+    >
       <div className="relative z-[1] flex items-center w-full">
         {children}
       </div>
@@ -60,7 +64,14 @@ export function GlassCard({
 
   if (href) {
     return (
-      <a href={href} target={target} rel={rel} className="block" onClick={playTap}>
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className="block"
+        onMouseEnter={playHover} // Hover feedback
+        onClick={playTap}       // Tap feedback
+      >
         {inner}
       </a>
     );

@@ -127,7 +127,8 @@ export function playTap() {
 
 /**
  * Premium Hover Tick
- * Ultra-light, tactile feedback for cursor movement.
+ * Dual-layered tactile mechanical touch sound.
+ * Combines an organic wood-block thud with a shimmering crystal snap.
  */
 export function playHover() {
   try {
@@ -135,21 +136,34 @@ export function playHover() {
     if (!audioCtx) return;
     const now = audioCtx.currentTime;
 
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    const gain2 = audioCtx.createGain();
 
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1800, now);
+    // Layer 1: Luxury organic wood block tick
+    osc1.type = "triangle";
+    osc1.frequency.setValueAtTime(1200, now);
+    gain1.gain.setValueAtTime(0, now);
+    gain1.gain.linearRampToValueAtTime(0.012, now + 0.002);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
 
-    gainNode.gain.setValueAtTime(0, now);
-    gainNode.gain.linearRampToValueAtTime(0.02, now + 0.002);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+    // Layer 2: Shimmering crystal snap
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(2400, now);
+    gain2.gain.setValueAtTime(0, now);
+    gain2.gain.linearRampToValueAtTime(0.006, now + 0.001);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
 
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    osc1.connect(gain1);
+    osc2.connect(gain2);
+    gain1.connect(audioCtx.destination);
+    gain2.connect(audioCtx.destination);
 
-    osc.start(now);
-    osc.stop(now + 0.05);
+    osc1.start(now);
+    osc1.stop(now + 0.05);
+    osc2.start(now);
+    osc2.stop(now + 0.04);
   } catch {
     // silent fail
   }
