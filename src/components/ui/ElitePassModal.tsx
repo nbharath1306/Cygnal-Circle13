@@ -189,11 +189,9 @@ END:VCARD`;
         transition={{ delay: 2.2, type: "spring", stiffness: 260, damping: 20 }}
         onMouseEnter={playHover}
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.4)] border border-amber-400/30 active:scale-95 transition-transform group"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 flex items-center justify-center cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.4)] active:scale-95 transition-transform group liquid-glass !rounded-full"
         style={{
-          background: "linear-gradient(135deg, rgba(255, 155, 4, 0.85), rgba(230, 92, 0, 0.85))",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          background: "linear-gradient(135deg, rgba(255, 155, 4, 0.65), rgba(230, 92, 0, 0.65))",
         }}
         aria-label="Open Elite Pass"
       >
