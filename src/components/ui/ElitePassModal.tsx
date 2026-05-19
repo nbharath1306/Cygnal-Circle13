@@ -189,17 +189,17 @@ END:VCARD`;
         transition={{ delay: 2.2, type: "spring", stiffness: 260, damping: 20 }}
         onMouseEnter={playHover}
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 flex items-center justify-center cursor-pointer shadow-[0_6px_22px_rgba(230,92,0,0.4)] active:scale-95 transition-transform group liquid-glass !rounded-full"
-        style={{
-          background: "linear-gradient(135deg, rgba(255, 155, 4, 0.65), rgba(230, 92, 0, 0.65))",
-        }}
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 flex items-center justify-center cursor-pointer active:scale-95 transition-transform group"
         aria-label="Open Elite Pass"
       >
-        <span className="absolute right-16 scale-0 group-hover:scale-100 transition-all duration-200 origin-right bg-black/75 backdrop-blur-md text-white text-[11px] font-bold py-2 px-3 rounded-xl border border-white/10 shadow-lg pointer-events-none whitespace-nowrap tracking-wider uppercase">
+        {/* Inner liquid glass background */}
+        <div className="absolute inset-0 liquid-glass !rounded-full" />
+
+        <span className="absolute right-16 scale-0 group-hover:scale-100 transition-all duration-200 origin-right bg-black/75 backdrop-blur-md text-white text-[11px] font-bold py-2 px-3 rounded-xl border border-white/10 shadow-lg pointer-events-none whitespace-nowrap tracking-wider uppercase z-10">
           C13
         </span>
 
-        <div className="font-sans font-[900] text-[22px] text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] select-none">
+        <div className="font-sans font-[900] text-[22px] text-white tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] select-none relative z-10">
           C13
         </div>
       </motion.button>
