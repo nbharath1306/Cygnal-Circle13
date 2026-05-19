@@ -73,7 +73,7 @@ END:VCARD`;
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 2.2, type: "spring", stiffness: 260, damping: 20 }}
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_20px_rgba(10,132,255,0.3)] border border-white/20 active:scale-95 transition-transform"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_6px_20px_rgba(10,132,255,0.3)] border border-white/20 active:scale-95 transition-transform group"
         style={{
           background: "linear-gradient(135deg, rgba(10, 132, 255, 0.8), rgba(64, 156, 255, 0.8))",
           backdropFilter: "blur(12px)",
@@ -81,11 +81,17 @@ END:VCARD`;
         }}
         aria-label="Open Elite Pass"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
-          <path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M16 11V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M12 11V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M8 11V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Sleek executive hover label */}
+        <span className="absolute right-16 scale-0 group-hover:scale-100 transition-all duration-200 origin-right bg-black/75 backdrop-blur-md text-white text-[11px] font-bold py-2 px-3 rounded-xl border border-white/10 shadow-lg pointer-events-none whitespace-nowrap tracking-wider uppercase">
+          Save Contact
+        </span>
+
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+          <rect x="3" y="4" width="18" height="16" rx="3" />
+          <circle cx="10" cy="11" r="2.5" />
+          <path d="M6 17c0-2 2-3 4-3s4 1 4 3" />
+          <line x1="17" y1="10" x2="17" y2="14" />
+          <line x1="15" y1="12" x2="19" y2="12" />
         </svg>
       </motion.button>
 
