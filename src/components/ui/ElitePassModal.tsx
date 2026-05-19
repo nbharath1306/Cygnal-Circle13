@@ -7,6 +7,15 @@ import { playTap } from "@/lib/sound";
 import type { TeamMember } from "@/data/types";
 import Image from "next/image";
 
+interface PaperShaving {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  rotate: number;
+}
+
 export function ElitePassModal({ member }: { member: TeamMember }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isTorn, setIsTorn] = useState(false);
@@ -20,6 +29,10 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
   const [contactInfo, setContactInfo] = useState("");
   const [meetingContext, setMeetingContext] = useState("");
 
+  // Paper shavings particle state
+  const [shavings, setShavings] = useState<PaperShaving[]>([]);
+  const lastX = useRef(0);
+
   const cardRef = useRef<HTMLDivElement>(null);
   
   // Scissor drag tracking
@@ -28,11 +41,28 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
   const dragX = useMotionValue(0);
   const [dragProgressPercent, setDragProgressPercent] = useState(0);
 
-  // Monitor drag progress to display real-time physical slicing
+  // Monitor drag progress, spawn dynamic paper shavings
   useEffect(() => {
     const unsubscribe = dragX.on("change", (latest) => {
       if (trackWidth > 0) {
         setDragProgressPercent((latest / trackWidth) * 100);
+      }
+
+      // Spawn real paper shavings relative to drag movement!
+      const diff = Math.abs(latest - lastX.current);
+      if (diff > 4.5 && latest > 5 && latest < trackWidth - 5) {
+        const count = 2 + Math.floor(Math.random() * 2);
+        const newShavings = Array.from({ length: count }).map(() => ({
+          id: Math.random() + latest,
+          x: latest + 14, // offset aligned with scissor blade point
+          y: 330, // exact seam vertical position
+          size: 2.5 + Math.random() * 3,
+          color: ["#FF9B04", "#E65C00", "#F59E0B", "#FFE0B2", "#FFEBE0"][Math.floor(Math.random() * 5)],
+          rotate: Math.random() * 360,
+        }));
+
+        setShavings((prev) => [...prev, ...newShavings].slice(-80)); // Limit to 80 elements to maintain 60 FPS
+        lastX.current = latest;
       }
     });
     return () => unsubscribe();
@@ -78,6 +108,8 @@ export function ElitePassModal({ member }: { member: TeamMember }) {
       setPosition("");
       setContactInfo("");
       setMeetingContext("");
+      setShavings([]);
+      lastX.current = 0;
     }
     setIsOpen(!isOpen);
   };
@@ -216,6 +248,40 @@ END:VCARD`;
                       height: showForm ? "440px" : "480px",
                     }}
                   >
+                    {/* ── REAL-TIME PAPER SHAVINGS EMITTER (Fluttering Downward) ── */}
+                    <AnimatePresence>
+                      {shavings.map((shaving) => (
+                        <motion.div
+                          key={shaving.id}
+                          className="absolute pointer-events-none rounded-[1px] z-30"
+                          initial={{
+                            x: shaving.x + 12,
+                            y: shaving.y,
+                            rotate: shaving.rotate,
+                            scale: 1,
+                            opacity: 1,
+                          }}
+                          animate={{
+                            y: shaving.y + 120 + Math.random() * 80, // fall
+                            x: shaving.x + 12 + (Math.random() * 46 - 23), // drift
+                            rotate: shaving.rotate + (Math.random() * 360 - 180), // spin
+                            opacity: 0,
+                            scale: 0.5,
+                          }}
+                          transition={{
+                            duration: 0.7 + Math.random() * 0.4,
+                            ease: "easeOut",
+                          }}
+                          style={{
+                            width: shaving.size,
+                            height: shaving.size * 1.6,
+                            backgroundColor: shaving.color,
+                            boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                          }}
+                        />
+                      ))}
+                    </AnimatePresence>
+
                     {/* ── CARD TOP HALF (Absolute Seam locked, Unified Gradient) ── */}
                     <motion.div
                       ref={cardRef}
@@ -411,11 +477,11 @@ END:VCARD`;
                             }
                           }}
                           style={{ x: dragX }}
-                          className="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_4px_14px_rgba(251,191,36,0.6)] border border-yellow-200/40 z-40 shrink-0"
+                          className="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-600 flex items-center justify-center cursor-grab active:cursor-grabbing shadow-[0_4px_14px_rgba(251,191,36,0.6)] border border-yellow-200/40 z-40 shrink-0 animate-[float_4s_infinite]"
                           whileHover={{ scale: 1.08 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          {/* Real scissor blades cut motion */}
+                          {/* Real mechanical criss-cross blade cutting action */}
                           <motion.svg
                             width="18"
                             height="18"
@@ -425,18 +491,41 @@ END:VCARD`;
                             strokeWidth="2.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            animate={isDragging ? {
-                              rotate: [0, 15, -15, 0],
-                            } : { rotate: 0 }}
-                            transition={isDragging ? {
-                              repeat: Infinity,
-                              duration: 0.3,
-                            } : {}}
                           >
-                            <circle cx="6" cy="6" r="3" />
-                            <circle cx="6" cy="18" r="3" />
-                            <line x1="9.8" y1="8.2" x2="21" y2="17" />
-                            <line x1="21" y1="7" x2="9.8" y2="15.8" />
+                            {/* Central mechanical pivot pin */}
+                            <circle cx="9" cy="12" r="1.5" fill="#4d2d00" />
+                            
+                            {/* Top Blade (Rotates clockwise) */}
+                            <motion.g
+                              style={{ originX: "9px", originY: "12px" }}
+                              animate={isDragging ? {
+                                rotate: [0, 24, -8, 24, -8, 0],
+                              } : { rotate: 0 }}
+                              transition={isDragging ? {
+                                repeat: Infinity,
+                                duration: 0.28,
+                                ease: "easeInOut",
+                              } : {}}
+                            >
+                              <circle cx="5" cy="8" r="2.5" />
+                              <line x1="7.2" y1="9.8" x2="19" y2="19" />
+                            </motion.g>
+
+                            {/* Bottom Blade (Rotates counter-clockwise) */}
+                            <motion.g
+                              style={{ originX: "9px", originY: "12px" }}
+                              animate={isDragging ? {
+                                rotate: [0, -24, 8, -24, 8, 0],
+                              } : { rotate: 0 }}
+                              transition={isDragging ? {
+                                repeat: Infinity,
+                                duration: 0.28,
+                                ease: "easeInOut",
+                              } : {}}
+                            >
+                              <circle cx="5" cy="16" r="2.5" />
+                              <line x1="7.2" y1="14.2" x2="19" y2="5" />
+                            </motion.g>
                           </motion.svg>
                         </motion.div>
                       </div>
